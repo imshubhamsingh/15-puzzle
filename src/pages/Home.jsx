@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 
+import { KeyBoardManagar } from '@HOC';
 class Home extends Component {
   render() {
-    return <div id="home">Default</div>;
+    return (
+      <div id="home">
+        {this.props.event} | {this.props.movement}
+      </div>
+    );
   }
 }
 
-export default Home;
+export default KeyBoardManagar(Home);

@@ -1,0 +1,32 @@
+@import url(./fonts/clear-sans.scss);
+
+$break-small: 520px;
+
+* {
+  box-sizing: border-box;
+  font-size: 15px;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Clear Sans', Arial, sans-serif;
+  background: #57407c;
+  color: white;
+  @media screen and (max-width: $break-small) {
+    margin: 20px 0;
+    padding: 0 20px;
+    font-size: 12px;
+  }
+}
+
+.app {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  & #home {
+    padding: 15px;
+  }
+}

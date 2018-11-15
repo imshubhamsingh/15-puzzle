@@ -12,7 +12,9 @@
           "@Components": "./src/components",
           "@Pages": "./src/pages",
           "@Elements": "./src/elements",
-          "@Styles": "./src/assets/styles"
+          "@Styles": "./src/assets/styles",
+          "@Utils": "./src/utils",
+          "@HOC": "./src/hoc"
         }
       }
     ]
