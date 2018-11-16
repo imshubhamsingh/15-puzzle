@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const KeyBoardManager = PassedComponent => props => {
+const useMovement = () => {
   const [event, handleEvent] = useState(null);
   const [movement, handleMovement] = useState(null);
 
@@ -133,24 +133,27 @@ const KeyBoardManager = PassedComponent => props => {
     window.document.addEventListener(eventTouchend, eventTouchendListner);
   };
 
+  const removeEventListeners = () => {
+    window.document.removeEventListener('keydown', handleKey);
+    window.document.removeEventListener(
+      eventTouchstart,
+      eventTouchStartListner
+    );
+    window.document.removeEventListener(eventTouchmove, eventTouchmoveListner);
+    window.document.removeEventListener(eventTouchend, eventTouchendListner);
+  };
+
   useEffect(() => {
     listenKey();
     listenSwipe();
-
-    return () => {
-      window.document.removeEventListener('keydown', handleKey);
-      window.document.removeEventListener(
-        eventTouchstart,
-        eventTouchStartListner
-      );
-      window.document.removeEventListener(
-        eventTouchmove,
-        eventTouchmoveListner
-      );
-      window.document.removeEventListener(eventTouchend, eventTouchendListner);
-    };
+    return () => removeEventListeners();
   });
 
+  return { event, movement };
+};
+
+const KeyBoardManager = PassedComponent => props => {
+  const { event, movement } = useMovement();
   return <PassedComponent movement={movement} event={event} />;
 };
 
