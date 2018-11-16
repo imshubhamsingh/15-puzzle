@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-
 import { KeyBoardManagar } from '@HOC';
+
+import { Instruction, Header } from '@Components';
+
+import { Container } from '@Elements';
 class Home extends Component {
   render() {
     return (
-      <div id="home">
+      <Container>
         {this.props.event} | {this.props.movement}
-      </div>
+        <div>
+          <Header />
+          {/* <Game /> */}
+          <Instruction />
+        </div>
+      </Container>
     );
   }
 }

@@ -6,6 +6,6 @@ export const buttonHoverColor = '#d3386a';
 
 export default {
   gridTileColor,
-  primaryfontColor,
+  primaryFontColor,
   buttonHoverColor
 };
