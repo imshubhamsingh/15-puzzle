@@ -19,10 +19,10 @@ const moveKey = ({ x, y }) => {
 export default class Cell extends Component {
   render() {
     //const { x, y } = moveKey(this.props.x, this.props.y);
-    const { number } = this.props;
+    const { number, index } = this.props;
     return (
       <CellContainer>
-        <NumberCellContainer number={number}>
+        <NumberCellContainer number={number} index={index + 1}>
           <div className="ball-1" />
           <div className="ball-2" />
           <div className="number">{number}</div>

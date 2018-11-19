@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScoreContainer } from '@Elements';
 
-const Score = () => {
+const Score = ({ moves }) => {
   return (
     <ScoreContainer>
       <div className="time">
@@ -10,7 +10,7 @@ const Score = () => {
       </div>
       <div className="move">
         <div className="score-title">Moves</div>
-        <div className="move-container">0</div>
+        <div className="move-container">{moves}</div>
       </div>
       <div className="best">
         <div className="score-title">best</div>

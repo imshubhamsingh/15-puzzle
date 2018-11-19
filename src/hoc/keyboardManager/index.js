@@ -151,8 +151,8 @@ const useMovement = () => {
 };
 
 const KeyBoardManager = PassedComponent => props => {
-  const event = useMovement();
-  return <PassedComponent event={event} {...props} />;
+  const eventType = useMovement();
+  return <PassedComponent eventType={eventType} {...props} />;
 };
 
 export default KeyBoardManager;

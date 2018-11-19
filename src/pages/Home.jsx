@@ -1,28 +1,29 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { KeyBoardManagar } from '@HOC';
 
 import { Instruction, Header, Game } from '@Components';
-import { Container, Wave, GameFactory } from '@Elements';
+import { Container, Wave, GameFactoryConsumer } from '@Elements';
 
 import Waves from '@Image/waves.gif';
 
-const Home = ({ event }) => {
+const Home = ({ eventType }) => {
   return (
-    <GameFactory>
-      <Container>
-        {console.log(event)}
-        <div>
-          <Header />
-          <br />
-          <Game event={event} />
-          <br />
-          <Instruction />
-
-          <Wave className="waves" src={Waves} alt="" />
-          {/* <PersonalInfo/> */}
-        </div>
-      </Container>
-    </GameFactory>
+    <Container>
+      <GameFactoryConsumer>
+        {({ values, methods }) => {
+          return (
+            <Fragment>
+              <Header />
+              <br />
+              <Game eventType={eventType} {...values} {...methods} />
+              <br />
+              <Instruction />
+              <Wave className="waves" src={Waves} alt="" />
+            </Fragment>
+          );
+        }}
+      </GameFactoryConsumer>
+    </Container>
   );
 };
 

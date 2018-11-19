@@ -56,7 +56,8 @@ export const CellContainer = styled.div`
 export const NumberCellContainer = styled.div`
   display: ${props => (props.number < 16 ? 'flex' : 'none')};
   border-radius: 10px;
-  background: #6ac6b8;
+  background: ${props =>
+    props.index === props.number ? '#E88A45' : '#6ac6b8'};
   cursor: pointer;
   position: relative;
   justify-content: center;
@@ -74,11 +75,11 @@ export const NumberCellContainer = styled.div`
 
   height: 107px;
   transform: ${({ x = 0, y = 0 }) => `translate3d(${x}px, ${y}px, 0)`};
-
   .ball-1,
   .ball-2 {
     position: absolute;
-    background-color: #499591;
+    background-color: ${props =>
+      props.index === props.number ? '  #CD583A' : '#499591'};
     opacity: 0.2;
     border-radius: 50%;
   }
@@ -96,7 +97,7 @@ export const NumberCellContainer = styled.div`
     right: 10px;
   }
   .shadow {
-    color: #499591;
+    color: ${props => (props.index === props.number ? '  #CD583A' : '#499591')};
     font-size: 90px;
     margin-left: ${props =>
       props.number.toString().length == 2

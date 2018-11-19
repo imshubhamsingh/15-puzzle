@@ -1,24 +1,28 @@
 import React, { Component } from 'react';
-import { GameScore, Button, GameFactoryConsumer } from '@Elements';
+import { GameScore, Button } from '@Elements';
 import Score from '../Score';
 import Grid from '../Grid';
 export default class Game extends Component {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.eventType !== this.props.eventType) {
+      //Perform some operation here
+      const [eventType, move] = this.props.eventType || [null, null];
+      const [row, col, location] = this.props.gettingEmptyBoxLocation();
+      this.props.moveCell(location, row, col, move);
+    }
+  }
+
   render() {
+    console.log(this.props);
     return (
-      <GameFactoryConsumer>
-        {({ values, methods }) => {
-          return (
-            <div>
-              <GameScore>
-                <Button onClick={methods.resetGame}>new game</Button>
-                <Score />
-              </GameScore>
-              <Grid numbers={values.numbers} />
-              <Button type="big">Pause</Button>
-            </div>
-          );
-        }}
-      </GameFactoryConsumer>
+      <div>
+        <GameScore>
+          <Button onClick={this.props.resetGame}>new game</Button>
+          <Score moves={this.props.moves} />
+        </GameScore>
+        <Grid numbers={this.props.numbers} eventType={this.props.eventType} />
+        <Button type="big">Pause</Button>
+      </div>
     );
   }
 }

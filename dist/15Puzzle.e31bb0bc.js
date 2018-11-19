@@ -28541,9 +28541,9 @@ var useMovement = function useMovement() {
 
 var KeyBoardManager = function KeyBoardManager(PassedComponent) {
   return function (props) {
-    var event = useMovement();
+    var eventType = useMovement();
     return _react.default.createElement(PassedComponent, (0, _extends2.default)({
-      event: event
+      eventType: eventType
     }, props));
   };
 };
@@ -28625,7 +28625,9 @@ module.exports = _toConsumableArray;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.GameFactoryConsumer = void 0;
+exports.default = exports.GameFactoryConsumer = exports.gameStatus = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -28650,26 +28652,49 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-var solution = function solution() {
-  return (0, _toConsumableArray2.default)(Array(16)).map(function (_, i) {
-    return i + 1;
+var genrateArray = function genrateArray(num, add) {
+  return (0, _toConsumableArray2.default)(Array(num)).map(function (_, i) {
+    return i + add;
   });
 };
 
-var shuffle = function shuffle(array) {
-  var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
+var gameStatus = {
+  GAME_IDLE: '__game_idle__',
+  GAME_STARTED: '__game_started__',
+  GAME_OVER: '__game_over__',
+  GAME_PAUSED: '__game_paused__'
+};
+exports.gameStatus = gameStatus;
 
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+var swap = function swap(arr, from, row, col, move) {
+  var yMove = move === 0 ? 1 : move === 2 ? -1 : 0;
+  var xMove = move === 3 ? 1 : move === 1 ? -1 : 0;
+  var newRow = row + yMove;
+  var newCol = col + xMove;
+
+  if (newRow <= -1 || newCol <= -1 || newRow >= 4 || newCol >= 4) {
+    return [false, arr];
   }
 
-  return array;
+  var to = newRow * 4 + newCol;
+  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
+  return [true, arr];
+};
+
+var shuffle = function shuffle(arr, size) {
+  var shuffled = arr.slice(0),
+      i = arr.length,
+      temp,
+      index;
+
+  while (i--) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+
+  return shuffled.slice(0, size);
 };
 
 var ValuesContext = (0, _react.createContext)({});
@@ -28692,38 +28717,74 @@ function (_Component) {
     }
 
     _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(GameFactory)).call.apply(_getPrototypeOf2, [this].concat(args)));
-    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "defaultState", function (num, add) {
-      return (0, _toConsumableArray2.default)(Array(num)).map(function (_, i) {
-        return i + add;
-      });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "defaultState", function (num) {
+      return {
+        numbers: shuffle(genrateArray(16, num), 16),
+        moves: 0,
+        seconds: 0,
+        gameStatus: gameStatus.GAME_IDLE
+      };
     });
-    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "state", {
-      numbers: _this.defaultState(16, 1)
-    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "state", _this.defaultState(1));
     (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "reset", function () {
-      _this.setState({
-        numbers: _this.defaultState(16, 18)
-      });
+      _this.setState(_this.defaultState(18));
 
       setTimeout(function () {
-        _this.setState(function () {
-          return {
-            numbers: shuffle(_this.defaultState(16, 1))
-          };
-        });
+        _this.setState(_this.defaultState(1));
       }, 100);
+    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "gettingEmptyBoxLocation", function () {
+      var location = _this.state.numbers.indexOf(16);
+
+      var column = Math.floor(location % 4);
+      var row = Math.floor(location / 4);
+      return [row, column, location];
+    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "move", function (from, row, col, moveType) {
+      _this.setState(function (prevState) {
+        var _swap = swap(prevState.numbers, from, row, col, moveType),
+            _swap2 = (0, _slicedToArray2.default)(_swap, 2),
+            updated = _swap2[0],
+            newNumList = _swap2[1];
+
+        if (updated) {
+          return {
+            number: newNumList,
+            moves: prevState.moves + 1
+          };
+        }
+      });
+    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "addTimer", function () {
+      _this.setState(function (prevState) {
+        return {
+          seconds: prevState.seconds + 1
+        };
+      });
     });
     return _this;
   }
 
   (0, _createClass2.default)(GameFactory, [{
+    key: "setTimer",
+    value: function setTimer() {
+      var _this2 = this;
+
+      this.timerId = setInterval(function () {
+        _this2.addTimer();
+      }, 1000);
+    }
+  }, {
     key: "render",
     value: function render() {
       return _react.default.createElement(ValuesContext.Provider, {
         value: this.state
       }, _react.default.createElement(SetValueContext.Provider, {
         value: {
-          resetGame: this.reset
+          resetGame: this.reset,
+          setTimer: this.setTimer,
+          gettingEmptyBoxLocation: this.gettingEmptyBoxLocation,
+          moveCell: this.move
         }
       }, this.props.children));
     }
@@ -28746,7 +28807,7 @@ var GameFactoryConsumer = function GameFactoryConsumer(_ref) {
 exports.GameFactoryConsumer = GameFactoryConsumer;
 var _default = GameFactory;
 exports.default = _default;
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/assertThisInitialized":"node_modules/@babel/runtime/helpers/assertThisInitialized.js","@babel/runtime/helpers/defineProperty":"node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/toConsumableArray":"node_modules/@babel/runtime/helpers/toConsumableArray.js","react":"node_modules/react/index.js"}],"node_modules/stylis/stylis.min.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/assertThisInitialized":"node_modules/@babel/runtime/helpers/assertThisInitialized.js","@babel/runtime/helpers/defineProperty":"node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/toConsumableArray":"node_modules/@babel/runtime/helpers/toConsumableArray.js","react":"node_modules/react/index.js"}],"node_modules/stylis/stylis.min.js":[function(require,module,exports) {
 var define;
 !function(e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e(null):"function"==typeof define&&define.amd?define(e(null)):window.stylis=e(null)}(function e(a){"use strict";var r=/^\0+/g,c=/[\0\r\f]/g,s=/: */g,t=/zoo|gra/,i=/([,: ])(transform)/g,f=/,+\s*(?![^(]*[)])/g,n=/ +\s*(?![^(]*[)])/g,l=/ *[\0] */g,o=/,\r+?/g,h=/([\t\r\n ])*\f?&/g,u=/:global\(((?:[^\(\)\[\]]*|\[.*\]|\([^\(\)]*\))*)\)/g,d=/\W+/g,b=/@(k\w+)\s*(\S*)\s*/,p=/::(place)/g,k=/:(read-only)/g,g=/\s+(?=[{\];=:>])/g,A=/([[}=:>])\s+/g,C=/(\{[^{]+?);(?=\})/g,w=/\s{2,}/g,v=/([^\(])(:+) */g,m=/[svh]\w+-[tblr]{2}/,x=/\(\s*(.*)\s*\)/g,$=/([\s\S]*?);/g,y=/-self|flex-/g,O=/[^]*?(:[rp][el]a[\w-]+)[^]*/,j=/stretch|:\s*\w+\-(?:conte|avail)/,z=/([^-])(image-set\()/,N="-webkit-",S="-moz-",F="-ms-",W=59,q=125,B=123,D=40,E=41,G=91,H=93,I=10,J=13,K=9,L=64,M=32,P=38,Q=45,R=95,T=42,U=44,V=58,X=39,Y=34,Z=47,_=62,ee=43,ae=126,re=0,ce=12,se=11,te=107,ie=109,fe=115,ne=112,le=111,oe=105,he=99,ue=100,de=112,be=1,pe=1,ke=0,ge=1,Ae=1,Ce=1,we=0,ve=0,me=0,xe=[],$e=[],ye=0,Oe=null,je=-2,ze=-1,Ne=0,Se=1,Fe=2,We=3,qe=0,Be=1,De="",Ee="",Ge="";function He(e,a,s,t,i){for(var f,n,o=0,h=0,u=0,d=0,g=0,A=0,C=0,w=0,m=0,$=0,y=0,O=0,j=0,z=0,R=0,we=0,$e=0,Oe=0,je=0,ze=s.length,Je=ze-1,Re="",Te="",Ue="",Ve="",Xe="",Ye="";R<ze;){if(C=s.charCodeAt(R),R===Je)if(h+d+u+o!==0){if(0!==h)C=h===Z?I:Z;d=u=o=0,ze++,Je++}if(h+d+u+o===0){if(R===Je){if(we>0)Te=Te.replace(c,"");if(Te.trim().length>0){switch(C){case M:case K:case W:case J:case I:break;default:Te+=s.charAt(R)}C=W}}if(1===$e)switch(C){case B:case q:case W:case Y:case X:case D:case E:case U:$e=0;case K:case J:case I:case M:break;default:for($e=0,je=R,g=C,R--,C=W;je<ze;)switch(s.charCodeAt(je++)){case I:case J:case W:++R,C=g,je=ze;break;case V:if(we>0)++R,C=g;case B:je=ze}}switch(C){case B:for(g=(Te=Te.trim()).charCodeAt(0),y=1,je=++R;R<ze;){switch(C=s.charCodeAt(R)){case B:y++;break;case q:y--;break;case Z:switch(A=s.charCodeAt(R+1)){case T:case Z:R=Qe(A,R,Je,s)}break;case G:C++;case D:C++;case Y:case X:for(;R++<Je&&s.charCodeAt(R)!==C;);}if(0===y)break;R++}if(Ue=s.substring(je,R),g===re)g=(Te=Te.replace(r,"").trim()).charCodeAt(0);switch(g){case L:if(we>0)Te=Te.replace(c,"");switch(A=Te.charCodeAt(1)){case ue:case ie:case fe:case Q:f=a;break;default:f=xe}if(je=(Ue=He(a,f,Ue,A,i+1)).length,me>0&&0===je)je=Te.length;if(ye>0)if(f=Ie(xe,Te,Oe),n=Pe(We,Ue,f,a,pe,be,je,A,i,t),Te=f.join(""),void 0!==n)if(0===(je=(Ue=n.trim()).length))A=0,Ue="";if(je>0)switch(A){case fe:Te=Te.replace(x,Me);case ue:case ie:case Q:Ue=Te+"{"+Ue+"}";break;case te:if(Ue=(Te=Te.replace(b,"$1 $2"+(Be>0?De:"")))+"{"+Ue+"}",1===Ae||2===Ae&&Le("@"+Ue,3))Ue="@"+N+Ue+"@"+Ue;else Ue="@"+Ue;break;default:if(Ue=Te+Ue,t===de)Ve+=Ue,Ue=""}else Ue="";break;default:Ue=He(a,Ie(a,Te,Oe),Ue,t,i+1)}Xe+=Ue,O=0,$e=0,z=0,we=0,Oe=0,j=0,Te="",Ue="",C=s.charCodeAt(++R);break;case q:case W:if((je=(Te=(we>0?Te.replace(c,""):Te).trim()).length)>1){if(0===z)if((g=Te.charCodeAt(0))===Q||g>96&&g<123)je=(Te=Te.replace(" ",":")).length;if(ye>0)if(void 0!==(n=Pe(Se,Te,a,e,pe,be,Ve.length,t,i,t)))if(0===(je=(Te=n.trim()).length))Te="\0\0";switch(g=Te.charCodeAt(0),A=Te.charCodeAt(1),g){case re:break;case L:if(A===oe||A===he){Ye+=Te+s.charAt(R);break}default:if(Te.charCodeAt(je-1)===V)break;Ve+=Ke(Te,g,A,Te.charCodeAt(2))}}O=0,$e=0,z=0,we=0,Oe=0,Te="",C=s.charCodeAt(++R)}}switch(C){case J:case I:if(h+d+u+o+ve===0)switch($){case E:case X:case Y:case L:case ae:case _:case T:case ee:case Z:case Q:case V:case U:case W:case B:case q:break;default:if(z>0)$e=1}if(h===Z)h=0;else if(ge+O===0&&t!==te&&Te.length>0)we=1,Te+="\0";if(ye*qe>0)Pe(Ne,Te,a,e,pe,be,Ve.length,t,i,t);be=1,pe++;break;case W:case q:if(h+d+u+o===0){be++;break}default:switch(be++,Re=s.charAt(R),C){case K:case M:if(d+o+h===0)switch(w){case U:case V:case K:case M:Re="";break;default:if(C!==M)Re=" "}break;case re:Re="\\0";break;case ce:Re="\\f";break;case se:Re="\\v";break;case P:if(d+h+o===0&&ge>0)Oe=1,we=1,Re="\f"+Re;break;case 108:if(d+h+o+ke===0&&z>0)switch(R-z){case 2:if(w===ne&&s.charCodeAt(R-3)===V)ke=w;case 8:if(m===le)ke=m}break;case V:if(d+h+o===0)z=R;break;case U:if(h+u+d+o===0)we=1,Re+="\r";break;case Y:case X:if(0===h)d=d===C?0:0===d?C:d;break;case G:if(d+h+u===0)o++;break;case H:if(d+h+u===0)o--;break;case E:if(d+h+o===0)u--;break;case D:if(d+h+o===0){if(0===O)switch(2*w+3*m){case 533:break;default:y=0,O=1}u++}break;case L:if(h+u+d+o+z+j===0)j=1;break;case T:case Z:if(d+o+u>0)break;switch(h){case 0:switch(2*C+3*s.charCodeAt(R+1)){case 235:h=Z;break;case 220:je=R,h=T}break;case T:if(C===Z&&w===T&&je+2!==R){if(33===s.charCodeAt(je+2))Ve+=s.substring(je,R+1);Re="",h=0}}}if(0===h){if(ge+d+o+j===0&&t!==te&&C!==W)switch(C){case U:case ae:case _:case ee:case E:case D:if(0===O){switch(w){case K:case M:case I:case J:Re+="\0";break;default:Re="\0"+Re+(C===U?"":"\0")}we=1}else switch(C){case D:if(z+7===R&&108===w)z=0;O=++y;break;case E:if(0==(O=--y))we=1,Re+="\0"}break;case K:case M:switch(w){case re:case B:case q:case W:case U:case ce:case K:case M:case I:case J:break;default:if(0===O)we=1,Re+="\0"}}if(Te+=Re,C!==M&&C!==K)$=C}}m=w,w=C,R++}if(je=Ve.length,me>0)if(0===je&&0===Xe.length&&0===a[0].length==false)if(t!==ie||1===a.length&&(ge>0?Ee:Ge)===a[0])je=a.join(",").length+2;if(je>0){if(f=0===ge&&t!==te?function(e){for(var a,r,s=0,t=e.length,i=Array(t);s<t;++s){for(var f=e[s].split(l),n="",o=0,h=0,u=0,d=0,b=f.length;o<b;++o){if(0===(h=(r=f[o]).length)&&b>1)continue;if(u=n.charCodeAt(n.length-1),d=r.charCodeAt(0),a="",0!==o)switch(u){case T:case ae:case _:case ee:case M:case D:break;default:a=" "}switch(d){case P:r=a+Ee;case ae:case _:case ee:case M:case E:case D:break;case G:r=a+r+Ee;break;case V:switch(2*r.charCodeAt(1)+3*r.charCodeAt(2)){case 530:if(Ce>0){r=a+r.substring(8,h-1);break}default:if(o<1||f[o-1].length<1)r=a+Ee+r}break;case U:a="";default:if(h>1&&r.indexOf(":")>0)r=a+r.replace(v,"$1"+Ee+"$2");else r=a+r+Ee}n+=r}i[s]=n.replace(c,"").trim()}return i}(a):a,ye>0)if(void 0!==(n=Pe(Fe,Ve,f,e,pe,be,je,t,i,t))&&0===(Ve=n).length)return Ye+Ve+Xe;if(Ve=f.join(",")+"{"+Ve+"}",Ae*ke!=0){if(2===Ae&&!Le(Ve,2))ke=0;switch(ke){case le:Ve=Ve.replace(k,":"+S+"$1")+Ve;break;case ne:Ve=Ve.replace(p,"::"+N+"input-$1")+Ve.replace(p,"::"+S+"$1")+Ve.replace(p,":"+F+"input-$1")+Ve}ke=0}}return Ye+Ve+Xe}function Ie(e,a,r){var c=a.trim().split(o),s=c,t=c.length,i=e.length;switch(i){case 0:case 1:for(var f=0,n=0===i?"":e[0]+" ";f<t;++f)s[f]=Je(n,s[f],r,i).trim();break;default:f=0;var l=0;for(s=[];f<t;++f)for(var h=0;h<i;++h)s[l++]=Je(e[h]+" ",c[f],r,i).trim()}return s}function Je(e,a,r,c){var s=a,t=s.charCodeAt(0);if(t<33)t=(s=s.trim()).charCodeAt(0);switch(t){case P:switch(ge+c){case 0:case 1:if(0===e.trim().length)break;default:return s.replace(h,"$1"+e.trim())}break;case V:switch(s.charCodeAt(1)){case 103:if(Ce>0&&ge>0)return s.replace(u,"$1").replace(h,"$1"+Ge);break;default:return e.trim()+s.replace(h,"$1"+e.trim())}default:if(r*ge>0&&s.indexOf("\f")>0)return s.replace(h,(e.charCodeAt(0)===V?"":"$1")+e.trim())}return e+s}function Ke(e,a,r,c){var l,o=0,h=e+";",u=2*a+3*r+4*c;if(944===u)return function(e){var a=e.length,r=e.indexOf(":",9)+1,c=e.substring(0,r).trim(),s=e.substring(r,a-1).trim();switch(e.charCodeAt(9)*Be){case 0:break;case Q:if(110!==e.charCodeAt(10))break;default:for(var t=s.split((s="",f)),i=0,r=0,a=t.length;i<a;r=0,++i){for(var l=t[i],o=l.split(n);l=o[r];){var h=l.charCodeAt(0);if(1===Be&&(h>L&&h<90||h>96&&h<123||h===R||h===Q&&l.charCodeAt(1)!==Q))switch(isNaN(parseFloat(l))+(-1!==l.indexOf("("))){case 1:switch(l){case"infinite":case"alternate":case"backwards":case"running":case"normal":case"forwards":case"both":case"none":case"linear":case"ease":case"ease-in":case"ease-out":case"ease-in-out":case"paused":case"reverse":case"alternate-reverse":case"inherit":case"initial":case"unset":case"step-start":case"step-end":break;default:l+=De}}o[r++]=l}s+=(0===i?"":",")+o.join(" ")}}if(s=c+s+";",1===Ae||2===Ae&&Le(s,1))return N+s+s;return s}(h);else if(0===Ae||2===Ae&&!Le(h,1))return h;switch(u){case 1015:return 97===h.charCodeAt(10)?N+h+h:h;case 951:return 116===h.charCodeAt(3)?N+h+h:h;case 963:return 110===h.charCodeAt(5)?N+h+h:h;case 1009:if(100!==h.charCodeAt(4))break;case 969:case 942:return N+h+h;case 978:return N+h+S+h+h;case 1019:case 983:return N+h+S+h+F+h+h;case 883:if(h.charCodeAt(8)===Q)return N+h+h;if(h.indexOf("image-set(",11)>0)return h.replace(z,"$1"+N+"$2")+h;return h;case 932:if(h.charCodeAt(4)===Q)switch(h.charCodeAt(5)){case 103:return N+"box-"+h.replace("-grow","")+N+h+F+h.replace("grow","positive")+h;case 115:return N+h+F+h.replace("shrink","negative")+h;case 98:return N+h+F+h.replace("basis","preferred-size")+h}return N+h+F+h+h;case 964:return N+h+F+"flex-"+h+h;case 1023:if(99!==h.charCodeAt(8))break;return l=h.substring(h.indexOf(":",15)).replace("flex-","").replace("space-between","justify"),N+"box-pack"+l+N+h+F+"flex-pack"+l+h;case 1005:return t.test(h)?h.replace(s,":"+N)+h.replace(s,":"+S)+h:h;case 1e3:switch(o=(l=h.substring(13).trim()).indexOf("-")+1,l.charCodeAt(0)+l.charCodeAt(o)){case 226:l=h.replace(m,"tb");break;case 232:l=h.replace(m,"tb-rl");break;case 220:l=h.replace(m,"lr");break;default:return h}return N+h+F+l+h;case 1017:if(-1===h.indexOf("sticky",9))return h;case 975:switch(o=(h=e).length-10,u=(l=(33===h.charCodeAt(o)?h.substring(0,o):h).substring(e.indexOf(":",7)+1).trim()).charCodeAt(0)+(0|l.charCodeAt(7))){case 203:if(l.charCodeAt(8)<111)break;case 115:h=h.replace(l,N+l)+";"+h;break;case 207:case 102:h=h.replace(l,N+(u>102?"inline-":"")+"box")+";"+h.replace(l,N+l)+";"+h.replace(l,F+l+"box")+";"+h}return h+";";case 938:if(h.charCodeAt(5)===Q)switch(h.charCodeAt(6)){case 105:return l=h.replace("-items",""),N+h+N+"box-"+l+F+"flex-"+l+h;case 115:return N+h+F+"flex-item-"+h.replace(y,"")+h;default:return N+h+F+"flex-line-pack"+h.replace("align-content","").replace(y,"")+h}break;case 973:case 989:if(h.charCodeAt(3)!==Q||122===h.charCodeAt(4))break;case 931:case 953:if(true===j.test(e))if(115===(l=e.substring(e.indexOf(":")+1)).charCodeAt(0))return Ke(e.replace("stretch","fill-available"),a,r,c).replace(":fill-available",":stretch");else return h.replace(l,N+l)+h.replace(l,S+l.replace("fill-",""))+h;break;case 962:if(h=N+h+(102===h.charCodeAt(5)?F+h:"")+h,r+c===211&&105===h.charCodeAt(13)&&h.indexOf("transform",10)>0)return h.substring(0,h.indexOf(";",27)+1).replace(i,"$1"+N+"$2")+h}return h}function Le(e,a){var r=e.indexOf(1===a?":":"{"),c=e.substring(0,3!==a?r:10),s=e.substring(r+1,e.length-1);return Oe(2!==a?c:c.replace(O,"$1"),s,a)}function Me(e,a){var r=Ke(a,a.charCodeAt(0),a.charCodeAt(1),a.charCodeAt(2));return r!==a+";"?r.replace($," or ($1)").substring(4):"("+a+")"}function Pe(e,a,r,c,s,t,i,f,n,l){for(var o,h=0,u=a;h<ye;++h)switch(o=$e[h].call(Te,e,u,r,c,s,t,i,f,n,l)){case void 0:case false:case true:case null:break;default:u=o}if(u!==a)return u}function Qe(e,a,r,c){for(var s=a+1;s<r;++s)switch(c.charCodeAt(s)){case Z:if(e===T)if(c.charCodeAt(s-1)===T&&a+2!==s)return s+1;break;case I:if(e===Z)return s+1}return s}function Re(e){for(var a in e){var r=e[a];switch(a){case"keyframe":Be=0|r;break;case"global":Ce=0|r;break;case"cascade":ge=0|r;break;case"compress":we=0|r;break;case"semicolon":ve=0|r;break;case"preserve":me=0|r;break;case"prefix":if(Oe=null,!r)Ae=0;else if("function"!=typeof r)Ae=1;else Ae=2,Oe=r}}return Re}function Te(a,r){if(void 0!==this&&this.constructor===Te)return e(a);var s=a,t=s.charCodeAt(0);if(t<33)t=(s=s.trim()).charCodeAt(0);if(Be>0)De=s.replace(d,t===G?"":"-");if(t=1,1===ge)Ge=s;else Ee=s;var i,f=[Ge];if(ye>0)if(void 0!==(i=Pe(ze,r,f,f,pe,be,0,0,0,0))&&"string"==typeof i)r=i;var n=He(xe,f,r,0,0);if(ye>0)if(void 0!==(i=Pe(je,n,f,f,pe,be,n.length,0,0,0))&&"string"!=typeof(n=i))t=0;return De="",Ge="",Ee="",ke=0,pe=1,be=1,we*t==0?n:n.replace(c,"").replace(g,"").replace(A,"$1").replace(C,"$1").replace(w," ")}if(Te.use=function e(a){switch(a){case void 0:case null:ye=$e.length=0;break;default:if("function"==typeof a)$e[ye++]=a;else if("object"==typeof a)for(var r=0,c=a.length;r<c;++r)e(a[r]);else qe=0|!!a}return e},Te.set=Re,void 0!==a)Re(a);return Te});
 
@@ -31614,195 +31675,7 @@ var _default = function _default(_ref) {
 };
 
 exports.default = _default;
-},{}],"src/utils/game/gameStatus.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.GAME_PAUSED = exports.GAME_OVER = exports.GAME_STARTED = exports.GAME_IDLE = void 0;
-var GAME_IDLE = Symbol('__GAME_IDLE__');
-exports.GAME_IDLE = GAME_IDLE;
-var GAME_STARTED = Symbol('__GAME_STARTED__');
-exports.GAME_STARTED = GAME_STARTED;
-var GAME_OVER = Symbol('__GAME_OVER__');
-exports.GAME_OVER = GAME_OVER;
-var GAME_PAUSED = Symbol('__GAME_PAUSED__');
-exports.GAME_PAUSED = GAME_PAUSED;
-var _default = {
-  GAME_IDLE: GAME_IDLE,
-  GAME_STARTED: GAME_STARTED,
-  GAME_OVER: GAME_OVER,
-  GAME_PAUSED: GAME_PAUSED
-};
-exports.default = _default;
-},{}],"src/utils/game/gameFactory.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.GameConsumer = void 0;
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf3 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
-var _react = _interopRequireWildcard(require("react"));
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-var solution = function solution() {
-  return (0, _toConsumableArray2.default)(Array(16)).map(function (_, i) {
-    return i + 1;
-  });
-};
-
-var shuffle = function shuffle(array) {
-  var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
-
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-};
-
-var ValuesContext = (0, _react.createContext)({});
-var SetValueContext = (0, _react.createContext)(function () {});
-
-var Form =
-/*#__PURE__*/
-function (_Component) {
-  (0, _inherits2.default)(Form, _Component);
-
-  function Form() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    (0, _classCallCheck2.default)(this, Form);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(Form)).call.apply(_getPrototypeOf2, [this].concat(args)));
-    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "state", {
-      numbers: []
-    });
-    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "reset", function () {
-      _this.setState(function (currState) {
-        return {
-          numbers: shuffle(currState.numbers)
-        };
-      });
-    });
-    return _this;
-  }
-
-  (0, _createClass2.default)(Form, [{
-    key: "render",
-    value: function render() {
-      return _react.default.createElement(ValuesContext.Provider, {
-        value: this.state
-      }, _react.default.createElement(SetValueContext.Provider, {
-        value: {
-          resetGame: this.reset
-        }
-      }, this.props.children));
-    }
-  }]);
-  return Form;
-}(_react.Component);
-
-var GameConsumer = function GameConsumer(_ref) {
-  var children = _ref.children;
-  return _react.default.createElement(ValuesContext.Consumer, null, function (values) {
-    return _react.default.createElement(SetValueContext.Consumer, null, function (methods) {
-      return children({
-        values: values,
-        methods: methods
-      });
-    });
-  });
-};
-
-exports.GameConsumer = GameConsumer;
-var _default = Form;
-exports.default = _default;
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/assertThisInitialized":"node_modules/@babel/runtime/helpers/assertThisInitialized.js","@babel/runtime/helpers/defineProperty":"node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/toConsumableArray":"node_modules/@babel/runtime/helpers/toConsumableArray.js","react":"node_modules/react/index.js"}],"src/utils/game/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var _exportNames = {
-  GameStatus: true,
-  GameFactory: true
-};
-Object.defineProperty(exports, "GameStatus", {
-  enumerable: true,
-  get: function () {
-    return _gameStatus.default;
-  }
-});
-Object.defineProperty(exports, "GameFactory", {
-  enumerable: true,
-  get: function () {
-    return _gameFactory.default;
-  }
-});
-
-var _gameStatus = _interopRequireWildcard(require("./gameStatus"));
-
-Object.keys(_gameStatus).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function () {
-      return _gameStatus[key];
-    }
-  });
-});
-
-var _gameFactory = _interopRequireWildcard(require("./gameFactory"));
-
-Object.keys(_gameFactory).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function () {
-      return _gameFactory[key];
-    }
-  });
-});
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-},{"./gameStatus":"src/utils/game/gameStatus.js","./gameFactory":"src/utils/game/gameFactory.js"}],"src/utils/index.js":[function(require,module,exports) {
+},{}],"src/utils/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31810,8 +31683,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 var _exportNames = {
   color: true,
-  transition: true,
-  game: true
+  transition: true
 };
 Object.defineProperty(exports, "color", {
   enumerable: true,
@@ -31823,12 +31695,6 @@ Object.defineProperty(exports, "transition", {
   enumerable: true,
   get: function () {
     return _transition.default;
-  }
-});
-Object.defineProperty(exports, "game", {
-  enumerable: true,
-  get: function () {
-    return _game.default;
   }
 });
 
@@ -31847,23 +31713,10 @@ Object.keys(_color).forEach(function (key) {
 
 var _transition = _interopRequireDefault(require("./transition"));
 
-var _game = _interopRequireWildcard(require("./game"));
-
-Object.keys(_game).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function () {
-      return _game[key];
-    }
-  });
-});
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-},{"./color":"src/utils/color.js","./transition":"src/utils/transition.js","./game":"src/utils/game/index.js"}],"src/elements/Button.js":[function(require,module,exports) {
+},{"./color":"src/utils/color.js","./transition":"src/utils/transition.js"}],"src/elements/Button.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31931,8 +31784,10 @@ exports.CellContainer = CellContainer;
 var NumberCellContainer = _styledComponents.default.div.withConfig({
   displayName: "Container__NumberCellContainer",
   componentId: "sc-16h46pr-3"
-})(["display:", ";border-radius:10px;background:#6ac6b8;cursor:pointer;position:relative;justify-content:center;align-items:center;font-family:'Pacifico',cursive;text-align:center;font-weight:bold;z-index:10;font-size:75px;width:107px;", ";animation-duration:0.75s;animation-name:bounceIn;height:107px;transform:", ";.ball-1,.ball-2{position:absolute;background-color:#499591;opacity:0.2;border-radius:50%;}.ball-1{height:30px;width:30px;top:21px;left:19px;}.ball-2{height:60px;width:60px;bottom:9px;right:10px;}.shadow{color:#499591;font-size:90px;margin-left:", "px;margin-top:", "px;}.number{color:white;z-index:99;position:absolute;top:-22px;left:", "px;}@media screen and (max-width:520px){width:58px;height:58px;line-height:67.5px;font-size:45px;padding-top:9px;padding-left:", "px;border-radius:5px;.ball-1{height:15px;width:15px;top:12px;left:9px;}.ball-2{height:30px;width:30px;bottom:4px;right:7px;}.shadow{font-size:53px;margin-left:", "px;margin-top:", "px;}.number{top:-14px;left:", "px;}}@keyframes bounceIn{from,20%,40%,60%,80%,to{animation-timing-function:cubic-bezier(0.215,0.61,0.355,1);}0%{opacity:0;transform:scale3d(0,0,0);}20%{transform:scale3d(1.1,1.1,1.1);}40%{transform:scale3d(0.9,0.9,0.9);}60%{opacity:1;transform:scale3d(1.03,1.03,1.03);}80%{transform:scale3d(0.97,0.97,0.97);}to{opacity:1;transform:scale3d(1,1,1);}}"], function (props) {
+})(["display:", ";border-radius:10px;background:", ";cursor:pointer;position:relative;justify-content:center;align-items:center;font-family:'Pacifico',cursive;text-align:center;font-weight:bold;z-index:10;font-size:75px;width:107px;", ";animation-duration:0.75s;animation-name:bounceIn;height:107px;transform:", ";.ball-1,.ball-2{position:absolute;background-color:", ";opacity:0.2;border-radius:50%;}.ball-1{height:30px;width:30px;top:21px;left:19px;}.ball-2{height:60px;width:60px;bottom:9px;right:10px;}.shadow{color:", ";font-size:90px;margin-left:", "px;margin-top:", "px;}.number{color:white;z-index:99;position:absolute;top:-22px;left:", "px;}@media screen and (max-width:520px){width:58px;height:58px;line-height:67.5px;font-size:45px;padding-top:9px;padding-left:", "px;border-radius:5px;.ball-1{height:15px;width:15px;top:12px;left:9px;}.ball-2{height:30px;width:30px;bottom:4px;right:7px;}.shadow{font-size:53px;margin-left:", "px;margin-top:", "px;}.number{top:-14px;left:", "px;}}@keyframes bounceIn{from,20%,40%,60%,80%,to{animation-timing-function:cubic-bezier(0.215,0.61,0.355,1);}0%{opacity:0;transform:scale3d(0,0,0);}20%{transform:scale3d(1.1,1.1,1.1);}40%{transform:scale3d(0.9,0.9,0.9);}60%{opacity:1;transform:scale3d(1.03,1.03,1.03);}80%{transform:scale3d(0.97,0.97,0.97);}to{opacity:1;transform:scale3d(1,1,1);}}"], function (props) {
   return props.number < 16 ? 'flex' : 'none';
+}, function (props) {
+  return props.index === props.number ? '#E88A45' : '#6ac6b8';
 }, (0, _utils.transition)({
   property: 'transform'
 }), function (_ref) {
@@ -31941,6 +31796,10 @@ var NumberCellContainer = _styledComponents.default.div.withConfig({
       _ref$y = _ref.y,
       y = _ref$y === void 0 ? 0 : _ref$y;
   return "translate3d(".concat(x, "px, ").concat(y, "px, 0)");
+}, function (props) {
+  return props.index === props.number ? '  #CD583A' : '#499591';
+}, function (props) {
+  return props.index === props.number ? '  #CD583A' : '#499591';
 }, function (props) {
   return props.number.toString().length == 2 ? props.number === 11 ? -16 : -6 : props.number === 1 ? -10 : 0;
 }, function (props) {
@@ -32181,7 +32040,8 @@ var _elements = require("../../elements");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Score = function Score() {
+var Score = function Score(_ref) {
+  var moves = _ref.moves;
   return _react.default.createElement(_elements.ScoreContainer, null, _react.default.createElement("div", {
     className: "time"
   }, _react.default.createElement("div", {
@@ -32194,7 +32054,7 @@ var Score = function Score() {
     className: "score-title"
   }, "Moves"), _react.default.createElement("div", {
     className: "move-container"
-  }, "0")), _react.default.createElement("div", {
+  }, moves)), _react.default.createElement("div", {
     className: "best"
   }, _react.default.createElement("div", {
     className: "score-title"
@@ -32275,9 +32135,12 @@ function (_Component) {
     key: "render",
     value: function render() {
       //const { x, y } = moveKey(this.props.x, this.props.y);
-      var number = this.props.number;
+      var _this$props = this.props,
+          number = _this$props.number,
+          index = _this$props.index;
       return _react.default.createElement(_elements.CellContainer, null, _react.default.createElement(_elements.NumberCellContainer, {
-        number: number
+        number: number,
+        index: index + 1
       }, _react.default.createElement("div", {
         className: "ball-1"
       }), _react.default.createElement("div", {
@@ -32337,7 +32200,8 @@ function (_Component) {
       return number.map(function (i, _) {
         return _react.default.createElement(_Cell.default, {
           key: _,
-          number: i
+          number: i,
+          index: _
         });
       });
     }
@@ -32358,6 +32222,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -32392,26 +32258,45 @@ function (_Component) {
   }
 
   (0, _createClass2.default)(Game, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.eventType !== this.props.eventType) {
+        //Perform some operation here
+        var _ref = this.props.eventType || [null, null],
+            _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+            eventType = _ref2[0],
+            move = _ref2[1];
+
+        var _this$props$gettingEm = this.props.gettingEmptyBoxLocation(),
+            _this$props$gettingEm2 = (0, _slicedToArray2.default)(_this$props$gettingEm, 3),
+            row = _this$props$gettingEm2[0],
+            col = _this$props$gettingEm2[1],
+            location = _this$props$gettingEm2[2];
+
+        this.props.moveCell(location, row, col, move);
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      return _react.default.createElement(_elements.GameFactoryConsumer, null, function (_ref) {
-        var values = _ref.values,
-            methods = _ref.methods;
-        return _react.default.createElement("div", null, _react.default.createElement(_elements.GameScore, null, _react.default.createElement(_elements.Button, {
-          onClick: methods.resetGame
-        }, "new game"), _react.default.createElement(_Score.default, null)), _react.default.createElement(_Grid.default, {
-          numbers: values.numbers
-        }), _react.default.createElement(_elements.Button, {
-          type: "big"
-        }, "Pause"));
-      });
+      console.log(this.props);
+      return _react.default.createElement("div", null, _react.default.createElement(_elements.GameScore, null, _react.default.createElement(_elements.Button, {
+        onClick: this.props.resetGame
+      }, "new game"), _react.default.createElement(_Score.default, {
+        moves: this.props.moves
+      })), _react.default.createElement(_Grid.default, {
+        numbers: this.props.numbers,
+        eventType: this.props.eventType
+      }), _react.default.createElement(_elements.Button, {
+        type: "big"
+      }, "Pause"));
     }
   }]);
   return Game;
 }(_react.Component);
 
 exports.default = Game;
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","../../elements":"src/elements/index.js","../Score":"src/components/Score/index.js","../Grid":"src/components/Grid/index.js"}],"src/components/Instructions/index.jsx":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","../../elements":"src/elements/index.js","../Score":"src/components/Score/index.js","../Grid":"src/components/Grid/index.js"}],"src/components/Instructions/index.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32570,7 +32455,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _react = _interopRequireWildcard(require("react"));
 
 var _hoc = require("../hoc");
 
@@ -32580,23 +32467,29 @@ var _elements = require("../elements");
 
 var _waves = _interopRequireDefault(require("../assets/img/waves.gif"));
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Home = function Home(_ref) {
-  var event = _ref.event;
-  return _react.default.createElement(_elements.GameFactory, null, _react.default.createElement(_elements.Container, null, console.log(event), _react.default.createElement("div", null, _react.default.createElement(_components.Header, null), _react.default.createElement("br", null), _react.default.createElement(_components.Game, {
-    event: event
-  }), _react.default.createElement("br", null), _react.default.createElement(_components.Instruction, null), _react.default.createElement(_elements.Wave, {
-    className: "waves",
-    src: _waves.default,
-    alt: ""
-  }))));
+  var eventType = _ref.eventType;
+  return _react.default.createElement(_elements.Container, null, _react.default.createElement(_elements.GameFactoryConsumer, null, function (_ref2) {
+    var values = _ref2.values,
+        methods = _ref2.methods;
+    return _react.default.createElement(_react.Fragment, null, _react.default.createElement(_components.Header, null), _react.default.createElement("br", null), _react.default.createElement(_components.Game, (0, _extends2.default)({
+      eventType: eventType
+    }, values, methods)), _react.default.createElement("br", null), _react.default.createElement(_components.Instruction, null), _react.default.createElement(_elements.Wave, {
+      className: "waves",
+      src: _waves.default,
+      alt: ""
+    }));
+  }));
 };
 
 var _default = (0, _hoc.KeyBoardManagar)(Home);
 
 exports.default = _default;
-},{"react":"node_modules/react/index.js","../hoc":"src/hoc/index.js","../components":"src/components/index.js","../elements":"src/elements/index.js","../assets/img/waves.gif":"src/assets/img/waves.gif"}],"src/pages/index.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/extends":"node_modules/@babel/runtime/helpers/extends.js","react":"node_modules/react/index.js","../hoc":"src/hoc/index.js","../components":"src/components/index.js","../elements":"src/elements/index.js","../assets/img/waves.gif":"src/assets/img/waves.gif"}],"src/pages/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32638,6 +32531,8 @@ require("./assets/styles/App.scss");
 
 var _pages = require("./pages");
 
+var _elements = require("./elements");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -32655,20 +32550,20 @@ function (_PureComponent) {
   (0, _createClass2.default)(App, [{
     key: "render",
     value: function render() {
-      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement("div", {
+      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_elements.GameFactory, null, _react.default.createElement("div", {
         className: "app"
       }, _react.default.createElement(_reactRouterDom.Route, {
         exact: true,
         path: "/",
         component: _pages.Home
-      })));
+      }))));
     }
   }]);
   return App;
 }(_react.PureComponent);
 
 exports.default = App;
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./assets/styles/App.scss":"src/assets/styles/App.scss","./pages":"src/pages/index.js"}],"index.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./assets/styles/App.scss":"src/assets/styles/App.scss","./pages":"src/pages/index.js","./elements":"src/elements/index.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
