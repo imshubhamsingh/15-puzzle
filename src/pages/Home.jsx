@@ -1,22 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { KeyBoardManagar } from '@HOC';
 
-import { Instruction, Header } from '@Components';
+import { Instruction, Header, Game } from '@Components';
+import { Container, Wave, GameFactory } from '@Elements';
 
-import { Container } from '@Elements';
-class Home extends Component {
-  render() {
-    return (
+import Waves from '@Image/waves.gif';
+
+const Home = ({ event }) => {
+  return (
+    <GameFactory>
       <Container>
-        {this.props.event} | {this.props.movement}
+        {console.log(event)}
         <div>
           <Header />
-          {/* <Game /> */}
+          <br />
+          <Game event={event} />
+          <br />
           <Instruction />
+
+          <Wave className="waves" src={Waves} alt="" />
+          {/* <PersonalInfo/> */}
         </div>
       </Container>
-    );
-  }
-}
+    </GameFactory>
+  );
+};
 
 export default KeyBoardManagar(Home);

@@ -28391,14 +28391,8 @@ var useMovement = function useMovement() {
       event = _useState2[0],
       handleEvent = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(null),
-      _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
-      movement = _useState4[0],
-      handleMovement = _useState4[1];
-
   var emit = function emit(event, data) {
-    handleEvent(event);
-    handleMovement(data);
+    handleEvent([event, data]);
   };
 
   var map = {
@@ -28487,9 +28481,8 @@ var useMovement = function useMovement() {
     } else {
       touchStartClientX = event.touches[0].clientX;
       touchStartClientY = event.touches[0].clientY;
-    }
+    } //event.preventDefault();
 
-    event.preventDefault();
   };
 
   var eventTouchmoveListner = function eventTouchmoveListner(event) {
@@ -28543,20 +28536,13 @@ var useMovement = function useMovement() {
       return removeEventListeners();
     };
   });
-  return {
-    event: event,
-    movement: movement
-  };
+  return event;
 };
 
 var KeyBoardManager = function KeyBoardManager(PassedComponent) {
   return function (props) {
-    var _useMovement = useMovement(),
-        event = _useMovement.event,
-        movement = _useMovement.movement;
-
+    var event = useMovement();
     return _react.default.createElement(PassedComponent, (0, _extends2.default)({
-      movement: movement,
       event: event
     }, props));
   };
@@ -28580,9 +28566,187 @@ Object.defineProperty(exports, "KeyBoardManagar", {
 var _keyboardManager = _interopRequireDefault(require("./keyboardManager"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./keyboardManager":"src/hoc/keyboardManager/index.js"}],"src/components/Game/index.jsx":[function(require,module,exports) {
+},{"./keyboardManager":"src/hoc/keyboardManager/index.js"}],"node_modules/@babel/runtime/helpers/defineProperty.js":[function(require,module,exports) {
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
 
-},{}],"node_modules/stylis/stylis.min.js":[function(require,module,exports) {
+  return obj;
+}
+
+module.exports = _defineProperty;
+},{}],"node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":[function(require,module,exports) {
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
+      arr2[i] = arr[i];
+    }
+
+    return arr2;
+  }
+}
+
+module.exports = _arrayWithoutHoles;
+},{}],"node_modules/@babel/runtime/helpers/iterableToArray.js":[function(require,module,exports) {
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+
+module.exports = _iterableToArray;
+},{}],"node_modules/@babel/runtime/helpers/nonIterableSpread.js":[function(require,module,exports) {
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
+}
+
+module.exports = _nonIterableSpread;
+},{}],"node_modules/@babel/runtime/helpers/toConsumableArray.js":[function(require,module,exports) {
+var arrayWithoutHoles = require("./arrayWithoutHoles");
+
+var iterableToArray = require("./iterableToArray");
+
+var nonIterableSpread = require("./nonIterableSpread");
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread();
+}
+
+module.exports = _toConsumableArray;
+},{"./arrayWithoutHoles":"node_modules/@babel/runtime/helpers/arrayWithoutHoles.js","./iterableToArray":"node_modules/@babel/runtime/helpers/iterableToArray.js","./nonIterableSpread":"node_modules/@babel/runtime/helpers/nonIterableSpread.js"}],"src/elements/Game.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.GameFactoryConsumer = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf3 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+var solution = function solution() {
+  return (0, _toConsumableArray2.default)(Array(16)).map(function (_, i) {
+    return i + 1;
+  });
+};
+
+var shuffle = function shuffle(array) {
+  var currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
+
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+};
+
+var ValuesContext = (0, _react.createContext)({});
+var SetValueContext = (0, _react.createContext)(function () {});
+
+var GameFactory =
+/*#__PURE__*/
+function (_Component) {
+  (0, _inherits2.default)(GameFactory, _Component);
+
+  function GameFactory() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    (0, _classCallCheck2.default)(this, GameFactory);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(GameFactory)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "defaultState", function (num, add) {
+      return (0, _toConsumableArray2.default)(Array(num)).map(function (_, i) {
+        return i + add;
+      });
+    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "state", {
+      numbers: _this.defaultState(16, 1)
+    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "reset", function () {
+      _this.setState({
+        numbers: _this.defaultState(16, 18)
+      });
+
+      setTimeout(function () {
+        _this.setState(function () {
+          return {
+            numbers: shuffle(_this.defaultState(16, 1))
+          };
+        });
+      }, 100);
+    });
+    return _this;
+  }
+
+  (0, _createClass2.default)(GameFactory, [{
+    key: "render",
+    value: function render() {
+      return _react.default.createElement(ValuesContext.Provider, {
+        value: this.state
+      }, _react.default.createElement(SetValueContext.Provider, {
+        value: {
+          resetGame: this.reset
+        }
+      }, this.props.children));
+    }
+  }]);
+  return GameFactory;
+}(_react.Component);
+
+var GameFactoryConsumer = function GameFactoryConsumer(_ref) {
+  var children = _ref.children;
+  return _react.default.createElement(ValuesContext.Consumer, null, function (values) {
+    return _react.default.createElement(SetValueContext.Consumer, null, function (methods) {
+      return children({
+        values: values,
+        methods: methods
+      });
+    });
+  });
+};
+
+exports.GameFactoryConsumer = GameFactoryConsumer;
+var _default = GameFactory;
+exports.default = _default;
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/assertThisInitialized":"node_modules/@babel/runtime/helpers/assertThisInitialized.js","@babel/runtime/helpers/defineProperty":"node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/toConsumableArray":"node_modules/@babel/runtime/helpers/toConsumableArray.js","react":"node_modules/react/index.js"}],"node_modules/stylis/stylis.min.js":[function(require,module,exports) {
 var define;
 !function(e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e(null):"function"==typeof define&&define.amd?define(e(null)):window.stylis=e(null)}(function e(a){"use strict";var r=/^\0+/g,c=/[\0\r\f]/g,s=/: */g,t=/zoo|gra/,i=/([,: ])(transform)/g,f=/,+\s*(?![^(]*[)])/g,n=/ +\s*(?![^(]*[)])/g,l=/ *[\0] */g,o=/,\r+?/g,h=/([\t\r\n ])*\f?&/g,u=/:global\(((?:[^\(\)\[\]]*|\[.*\]|\([^\(\)]*\))*)\)/g,d=/\W+/g,b=/@(k\w+)\s*(\S*)\s*/,p=/::(place)/g,k=/:(read-only)/g,g=/\s+(?=[{\];=:>])/g,A=/([[}=:>])\s+/g,C=/(\{[^{]+?);(?=\})/g,w=/\s{2,}/g,v=/([^\(])(:+) */g,m=/[svh]\w+-[tblr]{2}/,x=/\(\s*(.*)\s*\)/g,$=/([\s\S]*?);/g,y=/-self|flex-/g,O=/[^]*?(:[rp][el]a[\w-]+)[^]*/,j=/stretch|:\s*\w+\-(?:conte|avail)/,z=/([^-])(image-set\()/,N="-webkit-",S="-moz-",F="-ms-",W=59,q=125,B=123,D=40,E=41,G=91,H=93,I=10,J=13,K=9,L=64,M=32,P=38,Q=45,R=95,T=42,U=44,V=58,X=39,Y=34,Z=47,_=62,ee=43,ae=126,re=0,ce=12,se=11,te=107,ie=109,fe=115,ne=112,le=111,oe=105,he=99,ue=100,de=112,be=1,pe=1,ke=0,ge=1,Ae=1,Ce=1,we=0,ve=0,me=0,xe=[],$e=[],ye=0,Oe=null,je=-2,ze=-1,Ne=0,Se=1,Fe=2,We=3,qe=0,Be=1,De="",Ee="",Ge="";function He(e,a,s,t,i){for(var f,n,o=0,h=0,u=0,d=0,g=0,A=0,C=0,w=0,m=0,$=0,y=0,O=0,j=0,z=0,R=0,we=0,$e=0,Oe=0,je=0,ze=s.length,Je=ze-1,Re="",Te="",Ue="",Ve="",Xe="",Ye="";R<ze;){if(C=s.charCodeAt(R),R===Je)if(h+d+u+o!==0){if(0!==h)C=h===Z?I:Z;d=u=o=0,ze++,Je++}if(h+d+u+o===0){if(R===Je){if(we>0)Te=Te.replace(c,"");if(Te.trim().length>0){switch(C){case M:case K:case W:case J:case I:break;default:Te+=s.charAt(R)}C=W}}if(1===$e)switch(C){case B:case q:case W:case Y:case X:case D:case E:case U:$e=0;case K:case J:case I:case M:break;default:for($e=0,je=R,g=C,R--,C=W;je<ze;)switch(s.charCodeAt(je++)){case I:case J:case W:++R,C=g,je=ze;break;case V:if(we>0)++R,C=g;case B:je=ze}}switch(C){case B:for(g=(Te=Te.trim()).charCodeAt(0),y=1,je=++R;R<ze;){switch(C=s.charCodeAt(R)){case B:y++;break;case q:y--;break;case Z:switch(A=s.charCodeAt(R+1)){case T:case Z:R=Qe(A,R,Je,s)}break;case G:C++;case D:C++;case Y:case X:for(;R++<Je&&s.charCodeAt(R)!==C;);}if(0===y)break;R++}if(Ue=s.substring(je,R),g===re)g=(Te=Te.replace(r,"").trim()).charCodeAt(0);switch(g){case L:if(we>0)Te=Te.replace(c,"");switch(A=Te.charCodeAt(1)){case ue:case ie:case fe:case Q:f=a;break;default:f=xe}if(je=(Ue=He(a,f,Ue,A,i+1)).length,me>0&&0===je)je=Te.length;if(ye>0)if(f=Ie(xe,Te,Oe),n=Pe(We,Ue,f,a,pe,be,je,A,i,t),Te=f.join(""),void 0!==n)if(0===(je=(Ue=n.trim()).length))A=0,Ue="";if(je>0)switch(A){case fe:Te=Te.replace(x,Me);case ue:case ie:case Q:Ue=Te+"{"+Ue+"}";break;case te:if(Ue=(Te=Te.replace(b,"$1 $2"+(Be>0?De:"")))+"{"+Ue+"}",1===Ae||2===Ae&&Le("@"+Ue,3))Ue="@"+N+Ue+"@"+Ue;else Ue="@"+Ue;break;default:if(Ue=Te+Ue,t===de)Ve+=Ue,Ue=""}else Ue="";break;default:Ue=He(a,Ie(a,Te,Oe),Ue,t,i+1)}Xe+=Ue,O=0,$e=0,z=0,we=0,Oe=0,j=0,Te="",Ue="",C=s.charCodeAt(++R);break;case q:case W:if((je=(Te=(we>0?Te.replace(c,""):Te).trim()).length)>1){if(0===z)if((g=Te.charCodeAt(0))===Q||g>96&&g<123)je=(Te=Te.replace(" ",":")).length;if(ye>0)if(void 0!==(n=Pe(Se,Te,a,e,pe,be,Ve.length,t,i,t)))if(0===(je=(Te=n.trim()).length))Te="\0\0";switch(g=Te.charCodeAt(0),A=Te.charCodeAt(1),g){case re:break;case L:if(A===oe||A===he){Ye+=Te+s.charAt(R);break}default:if(Te.charCodeAt(je-1)===V)break;Ve+=Ke(Te,g,A,Te.charCodeAt(2))}}O=0,$e=0,z=0,we=0,Oe=0,Te="",C=s.charCodeAt(++R)}}switch(C){case J:case I:if(h+d+u+o+ve===0)switch($){case E:case X:case Y:case L:case ae:case _:case T:case ee:case Z:case Q:case V:case U:case W:case B:case q:break;default:if(z>0)$e=1}if(h===Z)h=0;else if(ge+O===0&&t!==te&&Te.length>0)we=1,Te+="\0";if(ye*qe>0)Pe(Ne,Te,a,e,pe,be,Ve.length,t,i,t);be=1,pe++;break;case W:case q:if(h+d+u+o===0){be++;break}default:switch(be++,Re=s.charAt(R),C){case K:case M:if(d+o+h===0)switch(w){case U:case V:case K:case M:Re="";break;default:if(C!==M)Re=" "}break;case re:Re="\\0";break;case ce:Re="\\f";break;case se:Re="\\v";break;case P:if(d+h+o===0&&ge>0)Oe=1,we=1,Re="\f"+Re;break;case 108:if(d+h+o+ke===0&&z>0)switch(R-z){case 2:if(w===ne&&s.charCodeAt(R-3)===V)ke=w;case 8:if(m===le)ke=m}break;case V:if(d+h+o===0)z=R;break;case U:if(h+u+d+o===0)we=1,Re+="\r";break;case Y:case X:if(0===h)d=d===C?0:0===d?C:d;break;case G:if(d+h+u===0)o++;break;case H:if(d+h+u===0)o--;break;case E:if(d+h+o===0)u--;break;case D:if(d+h+o===0){if(0===O)switch(2*w+3*m){case 533:break;default:y=0,O=1}u++}break;case L:if(h+u+d+o+z+j===0)j=1;break;case T:case Z:if(d+o+u>0)break;switch(h){case 0:switch(2*C+3*s.charCodeAt(R+1)){case 235:h=Z;break;case 220:je=R,h=T}break;case T:if(C===Z&&w===T&&je+2!==R){if(33===s.charCodeAt(je+2))Ve+=s.substring(je,R+1);Re="",h=0}}}if(0===h){if(ge+d+o+j===0&&t!==te&&C!==W)switch(C){case U:case ae:case _:case ee:case E:case D:if(0===O){switch(w){case K:case M:case I:case J:Re+="\0";break;default:Re="\0"+Re+(C===U?"":"\0")}we=1}else switch(C){case D:if(z+7===R&&108===w)z=0;O=++y;break;case E:if(0==(O=--y))we=1,Re+="\0"}break;case K:case M:switch(w){case re:case B:case q:case W:case U:case ce:case K:case M:case I:case J:break;default:if(0===O)we=1,Re+="\0"}}if(Te+=Re,C!==M&&C!==K)$=C}}m=w,w=C,R++}if(je=Ve.length,me>0)if(0===je&&0===Xe.length&&0===a[0].length==false)if(t!==ie||1===a.length&&(ge>0?Ee:Ge)===a[0])je=a.join(",").length+2;if(je>0){if(f=0===ge&&t!==te?function(e){for(var a,r,s=0,t=e.length,i=Array(t);s<t;++s){for(var f=e[s].split(l),n="",o=0,h=0,u=0,d=0,b=f.length;o<b;++o){if(0===(h=(r=f[o]).length)&&b>1)continue;if(u=n.charCodeAt(n.length-1),d=r.charCodeAt(0),a="",0!==o)switch(u){case T:case ae:case _:case ee:case M:case D:break;default:a=" "}switch(d){case P:r=a+Ee;case ae:case _:case ee:case M:case E:case D:break;case G:r=a+r+Ee;break;case V:switch(2*r.charCodeAt(1)+3*r.charCodeAt(2)){case 530:if(Ce>0){r=a+r.substring(8,h-1);break}default:if(o<1||f[o-1].length<1)r=a+Ee+r}break;case U:a="";default:if(h>1&&r.indexOf(":")>0)r=a+r.replace(v,"$1"+Ee+"$2");else r=a+r+Ee}n+=r}i[s]=n.replace(c,"").trim()}return i}(a):a,ye>0)if(void 0!==(n=Pe(Fe,Ve,f,e,pe,be,je,t,i,t))&&0===(Ve=n).length)return Ye+Ve+Xe;if(Ve=f.join(",")+"{"+Ve+"}",Ae*ke!=0){if(2===Ae&&!Le(Ve,2))ke=0;switch(ke){case le:Ve=Ve.replace(k,":"+S+"$1")+Ve;break;case ne:Ve=Ve.replace(p,"::"+N+"input-$1")+Ve.replace(p,"::"+S+"$1")+Ve.replace(p,":"+F+"input-$1")+Ve}ke=0}}return Ye+Ve+Xe}function Ie(e,a,r){var c=a.trim().split(o),s=c,t=c.length,i=e.length;switch(i){case 0:case 1:for(var f=0,n=0===i?"":e[0]+" ";f<t;++f)s[f]=Je(n,s[f],r,i).trim();break;default:f=0;var l=0;for(s=[];f<t;++f)for(var h=0;h<i;++h)s[l++]=Je(e[h]+" ",c[f],r,i).trim()}return s}function Je(e,a,r,c){var s=a,t=s.charCodeAt(0);if(t<33)t=(s=s.trim()).charCodeAt(0);switch(t){case P:switch(ge+c){case 0:case 1:if(0===e.trim().length)break;default:return s.replace(h,"$1"+e.trim())}break;case V:switch(s.charCodeAt(1)){case 103:if(Ce>0&&ge>0)return s.replace(u,"$1").replace(h,"$1"+Ge);break;default:return e.trim()+s.replace(h,"$1"+e.trim())}default:if(r*ge>0&&s.indexOf("\f")>0)return s.replace(h,(e.charCodeAt(0)===V?"":"$1")+e.trim())}return e+s}function Ke(e,a,r,c){var l,o=0,h=e+";",u=2*a+3*r+4*c;if(944===u)return function(e){var a=e.length,r=e.indexOf(":",9)+1,c=e.substring(0,r).trim(),s=e.substring(r,a-1).trim();switch(e.charCodeAt(9)*Be){case 0:break;case Q:if(110!==e.charCodeAt(10))break;default:for(var t=s.split((s="",f)),i=0,r=0,a=t.length;i<a;r=0,++i){for(var l=t[i],o=l.split(n);l=o[r];){var h=l.charCodeAt(0);if(1===Be&&(h>L&&h<90||h>96&&h<123||h===R||h===Q&&l.charCodeAt(1)!==Q))switch(isNaN(parseFloat(l))+(-1!==l.indexOf("("))){case 1:switch(l){case"infinite":case"alternate":case"backwards":case"running":case"normal":case"forwards":case"both":case"none":case"linear":case"ease":case"ease-in":case"ease-out":case"ease-in-out":case"paused":case"reverse":case"alternate-reverse":case"inherit":case"initial":case"unset":case"step-start":case"step-end":break;default:l+=De}}o[r++]=l}s+=(0===i?"":",")+o.join(" ")}}if(s=c+s+";",1===Ae||2===Ae&&Le(s,1))return N+s+s;return s}(h);else if(0===Ae||2===Ae&&!Le(h,1))return h;switch(u){case 1015:return 97===h.charCodeAt(10)?N+h+h:h;case 951:return 116===h.charCodeAt(3)?N+h+h:h;case 963:return 110===h.charCodeAt(5)?N+h+h:h;case 1009:if(100!==h.charCodeAt(4))break;case 969:case 942:return N+h+h;case 978:return N+h+S+h+h;case 1019:case 983:return N+h+S+h+F+h+h;case 883:if(h.charCodeAt(8)===Q)return N+h+h;if(h.indexOf("image-set(",11)>0)return h.replace(z,"$1"+N+"$2")+h;return h;case 932:if(h.charCodeAt(4)===Q)switch(h.charCodeAt(5)){case 103:return N+"box-"+h.replace("-grow","")+N+h+F+h.replace("grow","positive")+h;case 115:return N+h+F+h.replace("shrink","negative")+h;case 98:return N+h+F+h.replace("basis","preferred-size")+h}return N+h+F+h+h;case 964:return N+h+F+"flex-"+h+h;case 1023:if(99!==h.charCodeAt(8))break;return l=h.substring(h.indexOf(":",15)).replace("flex-","").replace("space-between","justify"),N+"box-pack"+l+N+h+F+"flex-pack"+l+h;case 1005:return t.test(h)?h.replace(s,":"+N)+h.replace(s,":"+S)+h:h;case 1e3:switch(o=(l=h.substring(13).trim()).indexOf("-")+1,l.charCodeAt(0)+l.charCodeAt(o)){case 226:l=h.replace(m,"tb");break;case 232:l=h.replace(m,"tb-rl");break;case 220:l=h.replace(m,"lr");break;default:return h}return N+h+F+l+h;case 1017:if(-1===h.indexOf("sticky",9))return h;case 975:switch(o=(h=e).length-10,u=(l=(33===h.charCodeAt(o)?h.substring(0,o):h).substring(e.indexOf(":",7)+1).trim()).charCodeAt(0)+(0|l.charCodeAt(7))){case 203:if(l.charCodeAt(8)<111)break;case 115:h=h.replace(l,N+l)+";"+h;break;case 207:case 102:h=h.replace(l,N+(u>102?"inline-":"")+"box")+";"+h.replace(l,N+l)+";"+h.replace(l,F+l+"box")+";"+h}return h+";";case 938:if(h.charCodeAt(5)===Q)switch(h.charCodeAt(6)){case 105:return l=h.replace("-items",""),N+h+N+"box-"+l+F+"flex-"+l+h;case 115:return N+h+F+"flex-item-"+h.replace(y,"")+h;default:return N+h+F+"flex-line-pack"+h.replace("align-content","").replace(y,"")+h}break;case 973:case 989:if(h.charCodeAt(3)!==Q||122===h.charCodeAt(4))break;case 931:case 953:if(true===j.test(e))if(115===(l=e.substring(e.indexOf(":")+1)).charCodeAt(0))return Ke(e.replace("stretch","fill-available"),a,r,c).replace(":fill-available",":stretch");else return h.replace(l,N+l)+h.replace(l,S+l.replace("fill-",""))+h;break;case 962:if(h=N+h+(102===h.charCodeAt(5)?F+h:"")+h,r+c===211&&105===h.charCodeAt(13)&&h.indexOf("transform",10)>0)return h.substring(0,h.indexOf(";",27)+1).replace(i,"$1"+N+"$2")+h}return h}function Le(e,a){var r=e.indexOf(1===a?":":"{"),c=e.substring(0,3!==a?r:10),s=e.substring(r+1,e.length-1);return Oe(2!==a?c:c.replace(O,"$1"),s,a)}function Me(e,a){var r=Ke(a,a.charCodeAt(0),a.charCodeAt(1),a.charCodeAt(2));return r!==a+";"?r.replace($," or ($1)").substring(4):"("+a+")"}function Pe(e,a,r,c,s,t,i,f,n,l){for(var o,h=0,u=a;h<ye;++h)switch(o=$e[h].call(Te,e,u,r,c,s,t,i,f,n,l)){case void 0:case false:case true:case null:break;default:u=o}if(u!==a)return u}function Qe(e,a,r,c){for(var s=a+1;s<r;++s)switch(c.charCodeAt(s)){case Z:if(e===T)if(c.charCodeAt(s-1)===T&&a+2!==s)return s+1;break;case I:if(e===Z)return s+1}return s}function Re(e){for(var a in e){var r=e[a];switch(a){case"keyframe":Be=0|r;break;case"global":Ce=0|r;break;case"cascade":ge=0|r;break;case"compress":we=0|r;break;case"semicolon":ve=0|r;break;case"preserve":me=0|r;break;case"prefix":if(Oe=null,!r)Ae=0;else if("function"!=typeof r)Ae=1;else Ae=2,Oe=r}}return Re}function Te(a,r){if(void 0!==this&&this.constructor===Te)return e(a);var s=a,t=s.charCodeAt(0);if(t<33)t=(s=s.trim()).charCodeAt(0);if(Be>0)De=s.replace(d,t===G?"":"-");if(t=1,1===ge)Ge=s;else Ee=s;var i,f=[Ge];if(ye>0)if(void 0!==(i=Pe(ze,r,f,f,pe,be,0,0,0,0))&&"string"==typeof i)r=i;var n=He(xe,f,r,0,0);if(ye>0)if(void 0!==(i=Pe(je,n,f,f,pe,be,n.length,0,0,0))&&"string"!=typeof(n=i))t=0;return De="",Ge="",Ee="",ke=0,pe=1,be=1,we*t==0?n:n.replace(c,"").replace(g,"").replace(A,"$1").replace(C,"$1").replace(w," ")}if(Te.use=function e(a){switch(a){case void 0:case null:ye=$e.length=0;break;default:if("function"==typeof a)$e[ye++]=a;else if("object"==typeof a)for(var r=0,c=a.length;r<c;++r)e(a[r]);else qe=0|!!a}return e},Te.set=Re,void 0!==a)Re(a);return Te});
 
@@ -31410,9 +31574,11 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.buttonHoverColor = exports.primaryFontColor = exports.gridTileColor = void 0;
+exports.default = exports.buttonHoverColor = exports.primaryFontColor = exports.backgroundColor = exports.gridTileColor = void 0;
 var gridTileColor = '#3d2963';
 exports.gridTileColor = gridTileColor;
+var backgroundColor = '#57407c';
+exports.backgroundColor = backgroundColor;
 
 var primaryFontColor = function primaryFontColor() {
   var opacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
@@ -31423,6 +31589,7 @@ exports.primaryFontColor = primaryFontColor;
 var buttonHoverColor = '#d3386a';
 exports.buttonHoverColor = buttonHoverColor;
 var _default = {
+  backgroundColor: backgroundColor,
   gridTileColor: gridTileColor,
   primaryFontColor: primaryFontColor,
   buttonHoverColor: buttonHoverColor
@@ -31469,19 +31636,142 @@ var _default = {
   GAME_PAUSED: GAME_PAUSED
 };
 exports.default = _default;
-},{}],"src/utils/game/index.js":[function(require,module,exports) {
+},{}],"src/utils/game/gameFactory.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.GameConsumer = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf3 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+var solution = function solution() {
+  return (0, _toConsumableArray2.default)(Array(16)).map(function (_, i) {
+    return i + 1;
+  });
+};
+
+var shuffle = function shuffle(array) {
+  var currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
+
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+};
+
+var ValuesContext = (0, _react.createContext)({});
+var SetValueContext = (0, _react.createContext)(function () {});
+
+var Form =
+/*#__PURE__*/
+function (_Component) {
+  (0, _inherits2.default)(Form, _Component);
+
+  function Form() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    (0, _classCallCheck2.default)(this, Form);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(Form)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "state", {
+      numbers: []
+    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "reset", function () {
+      _this.setState(function (currState) {
+        return {
+          numbers: shuffle(currState.numbers)
+        };
+      });
+    });
+    return _this;
+  }
+
+  (0, _createClass2.default)(Form, [{
+    key: "render",
+    value: function render() {
+      return _react.default.createElement(ValuesContext.Provider, {
+        value: this.state
+      }, _react.default.createElement(SetValueContext.Provider, {
+        value: {
+          resetGame: this.reset
+        }
+      }, this.props.children));
+    }
+  }]);
+  return Form;
+}(_react.Component);
+
+var GameConsumer = function GameConsumer(_ref) {
+  var children = _ref.children;
+  return _react.default.createElement(ValuesContext.Consumer, null, function (values) {
+    return _react.default.createElement(SetValueContext.Consumer, null, function (methods) {
+      return children({
+        values: values,
+        methods: methods
+      });
+    });
+  });
+};
+
+exports.GameConsumer = GameConsumer;
+var _default = Form;
+exports.default = _default;
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/assertThisInitialized":"node_modules/@babel/runtime/helpers/assertThisInitialized.js","@babel/runtime/helpers/defineProperty":"node_modules/@babel/runtime/helpers/defineProperty.js","@babel/runtime/helpers/toConsumableArray":"node_modules/@babel/runtime/helpers/toConsumableArray.js","react":"node_modules/react/index.js"}],"src/utils/game/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var _exportNames = {
-  GameStatus: true
+  GameStatus: true,
+  GameFactory: true
 };
 Object.defineProperty(exports, "GameStatus", {
   enumerable: true,
   get: function () {
     return _gameStatus.default;
+  }
+});
+Object.defineProperty(exports, "GameFactory", {
+  enumerable: true,
+  get: function () {
+    return _gameFactory.default;
   }
 });
 
@@ -31498,8 +31788,21 @@ Object.keys(_gameStatus).forEach(function (key) {
   });
 });
 
+var _gameFactory = _interopRequireWildcard(require("./gameFactory"));
+
+Object.keys(_gameFactory).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _gameFactory[key];
+    }
+  });
+});
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-},{"./gameStatus":"src/utils/game/gameStatus.js"}],"src/utils/index.js":[function(require,module,exports) {
+},{"./gameStatus":"src/utils/game/gameStatus.js","./gameFactory":"src/utils/game/gameFactory.js"}],"src/utils/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31577,20 +31880,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Button = _styledComponents.default.button.withConfig({
   displayName: "Button",
   componentId: "sc-1m9brel-0"
-})(["font-size:22px;float:left;width:150px;height:100%;display:block;background-color:", ";border-radius:8px;text-decoration:none;color:", ";", ";line-height:60px;text-align:center;&:active{background-color:", ";transform:scale(0.99);}&:hover{background-color:", ";color:", ";}@media only screen and (max-width:520px){font-size:16px;width:100px;height:100%;border-radius:5px;padding:0 5px;line-height:42px;}"], _utils.color.gridTileColor, _utils.color.primaryFontColor(0.5), (0, _utils.transition)({
+})(["font-size:22px;width:", ";display:block;border-radius:8px;border:none;cursor:pointer;font-weight:bold;outline:none;text-decoration:none;line-height:60px;text-align:center;background-color:", ";color:", ";", ";", ";&:active{transform:scale(0.99);}&:hover{background-color:", ";color:", ";}@media (hover:none),(hover:on-demand){&:hover{background-color:", ";color:", ";}}@media only screen and (max-width:520px){font-size:16px;width:", ";height:100%;border-radius:5px;padding:0 5px;line-height:42px;}"], function (props) {
+  return props.type === 'big' ? '100%' : '150px';
+}, _utils.color.gridTileColor, _utils.color.primaryFontColor(0.5), (0, _utils.transition)({
   property: 'color'
-}), function (props) {
-  return props.error ? dullRed : ceruleanBlue;
-}, _utils.color.buttonHoverColor, _utils.color.primaryFontColor());
+}), (0, _utils.transition)({
+  property: 'background-color'
+}), _utils.color.buttonHoverColor, _utils.color.primaryFontColor(), _utils.color.gridTileColor, _utils.color.primaryFontColor(0.5), function (props) {
+  return props.type === 'big' ? '100%' : '112px';
+});
 
 exports.Button = Button;
-},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../utils":"src/utils/index.js"}],"src/elements/Cell.js":[function(require,module,exports) {
+},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../utils":"src/utils/index.js"}],"src/elements/Container.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Keys = exports.GridCell = exports.Container = void 0;
+exports.Wave = exports.GameInstructionContainer = exports.ScoreContainer = exports.GameScore = exports.Keys = exports.NumberCellContainer = exports.CellContainer = exports.GridContainer = exports.Container = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
@@ -31599,22 +31906,62 @@ var _utils = require("../utils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Container = _styledComponents.default.div.withConfig({
-  displayName: "Cell__Container",
-  componentId: "sc-1hyqmzt-0"
+  displayName: "Container",
+  componentId: "sc-16h46pr-0"
 })(["width:500px;margin:0 auto;@media screen and (max-width:520px){width:280px;margin:0 auto;}"]);
 
 exports.Container = Container;
 
-var GridCell = _styledComponents.default.div.withConfig({
-  displayName: "Cell__GridCell",
-  componentId: "sc-1hyqmzt-1"
-})(["width:106.25px;height:106.25px;margin-right:15px;float:left;border-radius:10px;background-color:", ";@media screen and (max-width:520px){width:57.5px;height:57.5px;margin-right:10px;}"], _utils.color.gridTileColor);
+var GridContainer = _styledComponents.default.div.withConfig({
+  displayName: "Container__GridContainer",
+  componentId: "sc-16h46pr-1"
+})(["margin:5px 0;grid-template-columns:auto auto auto auto;display:grid;position:relative;padding:15px;cursor:default;touch-action:none;background:", ";border-radius:12px;width:500px;height:500px;.grid-row{margin-bottom:15px;display:flex;}@media screen and (max-width:520px){width:292px;height:292px;.grid-row{margin-bottom:10px;}}"], _utils.color.backgroundColor);
 
-exports.GridCell = GridCell;
+exports.GridContainer = GridContainer;
+
+var CellContainer = _styledComponents.default.div.withConfig({
+  displayName: "Container__CellContainer",
+  componentId: "sc-16h46pr-2"
+})(["width:106.25px;height:106.25px;margin-right:15px;border-radius:10px;background-color:", ";@media screen and (max-width:520px){width:57.5px;height:57.5px;margin-right:10px;}&:last-child{margin-right:0;}"], _utils.color.gridTileColor); // 121px;
+// 67px;
+
+
+exports.CellContainer = CellContainer;
+
+var NumberCellContainer = _styledComponents.default.div.withConfig({
+  displayName: "Container__NumberCellContainer",
+  componentId: "sc-16h46pr-3"
+})(["display:", ";border-radius:10px;background:#6ac6b8;cursor:pointer;position:relative;justify-content:center;align-items:center;font-family:'Pacifico',cursive;text-align:center;font-weight:bold;z-index:10;font-size:75px;width:107px;", ";animation-duration:0.75s;animation-name:bounceIn;height:107px;transform:", ";.ball-1,.ball-2{position:absolute;background-color:#499591;opacity:0.2;border-radius:50%;}.ball-1{height:30px;width:30px;top:21px;left:19px;}.ball-2{height:60px;width:60px;bottom:9px;right:10px;}.shadow{color:#499591;font-size:90px;margin-left:", "px;margin-top:", "px;}.number{color:white;z-index:99;position:absolute;top:-22px;left:", "px;}@media screen and (max-width:520px){width:58px;height:58px;line-height:67.5px;font-size:45px;padding-top:9px;padding-left:", "px;border-radius:5px;.ball-1{height:15px;width:15px;top:12px;left:9px;}.ball-2{height:30px;width:30px;bottom:4px;right:7px;}.shadow{font-size:53px;margin-left:", "px;margin-top:", "px;}.number{top:-14px;left:", "px;}}@keyframes bounceIn{from,20%,40%,60%,80%,to{animation-timing-function:cubic-bezier(0.215,0.61,0.355,1);}0%{opacity:0;transform:scale3d(0,0,0);}20%{transform:scale3d(1.1,1.1,1.1);}40%{transform:scale3d(0.9,0.9,0.9);}60%{opacity:1;transform:scale3d(1.03,1.03,1.03);}80%{transform:scale3d(0.97,0.97,0.97);}to{opacity:1;transform:scale3d(1,1,1);}}"], function (props) {
+  return props.number < 16 ? 'flex' : 'none';
+}, (0, _utils.transition)({
+  property: 'transform'
+}), function (_ref) {
+  var _ref$x = _ref.x,
+      x = _ref$x === void 0 ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === void 0 ? 0 : _ref$y;
+  return "translate3d(".concat(x, "px, ").concat(y, "px, 0)");
+}, function (props) {
+  return props.number.toString().length == 2 ? props.number === 11 ? -16 : -6 : props.number === 1 ? -10 : 0;
+}, function (props) {
+  return props.number.toString().length == 2 ? -21 : -19;
+}, function (props) {
+  return props.number.toString().length == 2 ? 15 : 32;
+}, function (props) {
+  return props.number === 1 ? 3 : 0;
+}, function (props) {
+  return props.number.toString().length == 2 ? props.number === 11 ? -6 : -1 : props.number === 1 ? -7 : 0;
+}, function (props) {
+  return props.number.toString().length == 2 ? -20 : -19;
+}, function (props) {
+  return props.number.toString().length == 2 ? 7 : 16;
+});
+
+exports.NumberCellContainer = NumberCellContainer;
 
 var Keys = _styledComponents.default.span.withConfig({
-  displayName: "Cell__Keys",
-  componentId: "sc-1hyqmzt-2"
+  displayName: "Container__Keys",
+  componentId: "sc-16h46pr-4"
 })(["width:150px;float:left;height:105px;display:flex;flex-direction:column;align-items:center;& span.bottom-keys{margin-top:-16px;}& rect{", ";}& path{", ";}@media screen and (max-width:520px){display:none;}"], (0, _utils.transition)({
   property: 'fill'
 }), (0, _utils.transition)({
@@ -31622,7 +31969,37 @@ var Keys = _styledComponents.default.span.withConfig({
 }));
 
 exports.Keys = Keys;
-},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../utils":"src/utils/index.js"}],"src/elements/Text.js":[function(require,module,exports) {
+
+var GameScore = _styledComponents.default.div.withConfig({
+  displayName: "Container__GameScore",
+  componentId: "sc-16h46pr-5"
+})(["padding:0 15px;display:flex;justify-content:space-between;@media screen and (max-width:520px){padding:20px 10px 0 10px;}"]);
+
+exports.GameScore = GameScore;
+
+var ScoreContainer = _styledComponents.default.div.withConfig({
+  displayName: "Container__ScoreContainer",
+  componentId: "sc-16h46pr-6"
+})(["background:", ";display:flex;padding-left:15px;border-radius:8px;.move,.best,.time{position:relative;display:inline-block;text-align:right;padding:13px 20px 0 10px;float:right;}.score-title{text-transform:uppercase;font-size:12px;line-height:12px;color:", ";}.move-container,.best-container,.time-container{font-size:21px;line-height:25px;font-weight:bold;color:", ";}.best{opacity:0.5;}@media screen and (max-width:520px){padding-left:10px;border-radius:5px;.move-container,.best-container,.time-container{font-size:16px;line-height:14px;font-weight:bold;}.move,.best,.time{position:relative;display:inline-block;text-align:right;padding:8px 15px 0 10px;float:right;}.best{display:none;}}"], _utils.color.gridTileColor, _utils.color.primaryFontColor(), _utils.color.primaryFontColor());
+
+exports.ScoreContainer = ScoreContainer;
+
+var GameInstructionContainer = _styledComponents.default.div.withConfig({
+  displayName: "Container__GameInstructionContainer",
+  componentId: "sc-16h46pr-7"
+})(["display:flex;justify-content:space-between;@media screen and (max-width:520px){display:block;}"]);
+
+exports.GameInstructionContainer = GameInstructionContainer;
+
+var Wave = _styledComponents.default.img.withConfig({
+  displayName: "Container__Wave",
+  componentId: "sc-16h46pr-8"
+})(["margin-top:-30px;@media screen and (max-width:520px){max-width:280px;height:auto;}"]);
+
+exports.Wave = Wave;
+},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../utils":"src/utils/index.js"}],"src/assets/img/waves.gif":[function(require,module,exports) {
+module.exports = "/waves.ddcf5f9c.gif";
+},{}],"src/elements/Text.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31633,6 +32010,8 @@ exports.HeaderText = exports.GameInstruction = void 0;
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 var _utils = require("../utils");
+
+var _waves = _interopRequireDefault(require("../assets/img/waves.gif"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31646,10 +32025,10 @@ exports.GameInstruction = GameInstruction;
 var HeaderText = _styledComponents.default.div.withConfig({
   displayName: "Text__HeaderText",
   componentId: "kt7ucz-1"
-})(["font-family:'Pacifico',cursive;font-size:60px;text-align:center;span{font-size:85px;}color:", ";@media screen and (max-width:520px){font-size:63px;span{font-size:75px;}}"], _utils.color.primaryFontColor());
+})(["font-family:'Pacifico',cursive;font-size:60px;padding-left:7px;margin-left:2px;text-align:center;span{font-size:85px;}background:url(", ") repeat 0 0;width:100%;text-align:center;color:", ";margin-top:27px;@media screen and (max-width:520px){font-size:44px;margin-left:-3px;margin-top:5px;span{font-size:58px;}}"], _waves.default, _utils.color.primaryFontColor());
 
 exports.HeaderText = HeaderText;
-},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../utils":"src/utils/index.js"}],"src/elements/Icon.js":[function(require,module,exports) {
+},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../utils":"src/utils/index.js","../assets/img/waves.gif":"src/assets/img/waves.gif"}],"src/elements/Icon.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31712,11 +32091,34 @@ exports.Icon = Icon;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var _exportNames = {
+  GameFactory: true
+};
+Object.defineProperty(exports, "GameFactory", {
+  enumerable: true,
+  get: function () {
+    return _Game.default;
+  }
+});
+
+var _Game = _interopRequireWildcard(require("./Game"));
+
+Object.keys(_Game).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _Game[key];
+    }
+  });
+});
 
 var _Button = require("./Button");
 
 Object.keys(_Button).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
@@ -31725,14 +32127,15 @@ Object.keys(_Button).forEach(function (key) {
   });
 });
 
-var _Cell = require("./Cell");
+var _Container = require("./Container");
 
-Object.keys(_Cell).forEach(function (key) {
+Object.keys(_Container).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
-      return _Cell[key];
+      return _Container[key];
     }
   });
 });
@@ -31741,6 +32144,7 @@ var _Text = require("./Text");
 
 Object.keys(_Text).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
@@ -31753,6 +32157,7 @@ var _Icon = require("./Icon");
 
 Object.keys(_Icon).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
@@ -31760,7 +32165,253 @@ Object.keys(_Icon).forEach(function (key) {
     }
   });
 });
-},{"./Button":"src/elements/Button.js","./Cell":"src/elements/Cell.js","./Text":"src/elements/Text.js","./Icon":"src/elements/Icon.js"}],"src/components/Instructions/index.jsx":[function(require,module,exports) {
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+},{"./Game":"src/elements/Game.js","./Button":"src/elements/Button.js","./Container":"src/elements/Container.js","./Text":"src/elements/Text.js","./Icon":"src/elements/Icon.js"}],"src/components/Score/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _elements = require("../../elements");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Score = function Score() {
+  return _react.default.createElement(_elements.ScoreContainer, null, _react.default.createElement("div", {
+    className: "time"
+  }, _react.default.createElement("div", {
+    className: "score-title"
+  }, "Time"), _react.default.createElement("div", {
+    className: "time-container"
+  }, "12s")), _react.default.createElement("div", {
+    className: "move"
+  }, _react.default.createElement("div", {
+    className: "score-title"
+  }, "Moves"), _react.default.createElement("div", {
+    className: "move-container"
+  }, "0")), _react.default.createElement("div", {
+    className: "best"
+  }, _react.default.createElement("div", {
+    className: "score-title"
+  }, "best"), _react.default.createElement("div", {
+    className: "best-container"
+  }, "13392")));
+};
+
+var _default = Score;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","../../elements":"src/elements/index.js"}],"src/components/Cell/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _elements = require("../../elements");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var moveKey = function moveKey(_ref) {
+  var x = _ref.x,
+      y = _ref.y;
+
+  var _useState = (0, _react.useState)(0),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      moveX = _useState2[0],
+      handleX = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(0),
+      _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
+      moveY = _useState4[0],
+      handleY = _useState4[1];
+
+  (0, _react.useEffect)(function () {
+    handleX(function (currentX) {
+      return currentX + x;
+    });
+    handleY(function (currentY) {
+      return currentY + y;
+    });
+  }, [moveX, moveY]);
+  return {
+    x: x,
+    y: y
+  };
+};
+
+var Cell =
+/*#__PURE__*/
+function (_Component) {
+  (0, _inherits2.default)(Cell, _Component);
+
+  function Cell() {
+    (0, _classCallCheck2.default)(this, Cell);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Cell).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Cell, [{
+    key: "render",
+    value: function render() {
+      //const { x, y } = moveKey(this.props.x, this.props.y);
+      var number = this.props.number;
+      return _react.default.createElement(_elements.CellContainer, null, _react.default.createElement(_elements.NumberCellContainer, {
+        number: number
+      }, _react.default.createElement("div", {
+        className: "ball-1"
+      }), _react.default.createElement("div", {
+        className: "ball-2"
+      }), _react.default.createElement("div", {
+        className: "number"
+      }, number), _react.default.createElement("div", {
+        className: "shadow"
+      }, number)));
+    }
+  }]);
+  return Cell;
+}(_react.Component);
+
+exports.default = Cell;
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","../../elements":"src/elements/index.js"}],"src/components/Grid/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _elements = require("../../elements");
+
+var _Cell = _interopRequireDefault(require("../Cell"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Grid =
+/*#__PURE__*/
+function (_Component) {
+  (0, _inherits2.default)(Grid, _Component);
+
+  function Grid() {
+    (0, _classCallCheck2.default)(this, Grid);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Grid).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Grid, [{
+    key: "cellRender",
+    value: function cellRender(number) {
+      return number.map(function (i, _) {
+        return _react.default.createElement(_Cell.default, {
+          key: _,
+          number: i
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react.default.createElement(_elements.GridContainer, null, this.cellRender(this.props.numbers));
+    }
+  }]);
+  return Grid;
+}(_react.Component);
+
+exports.default = Grid;
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","../../elements":"src/elements/index.js","../Cell":"src/components/Cell/index.js"}],"src/components/Game/index.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _elements = require("../../elements");
+
+var _Score = _interopRequireDefault(require("../Score"));
+
+var _Grid = _interopRequireDefault(require("../Grid"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Game =
+/*#__PURE__*/
+function (_Component) {
+  (0, _inherits2.default)(Game, _Component);
+
+  function Game() {
+    (0, _classCallCheck2.default)(this, Game);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Game).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Game, [{
+    key: "render",
+    value: function render() {
+      return _react.default.createElement(_elements.GameFactoryConsumer, null, function (_ref) {
+        var values = _ref.values,
+            methods = _ref.methods;
+        return _react.default.createElement("div", null, _react.default.createElement(_elements.GameScore, null, _react.default.createElement(_elements.Button, {
+          onClick: methods.resetGame
+        }, "new game"), _react.default.createElement(_Score.default, null)), _react.default.createElement(_Grid.default, {
+          numbers: values.numbers
+        }), _react.default.createElement(_elements.Button, {
+          type: "big"
+        }, "Pause"));
+      });
+    }
+  }]);
+  return Game;
+}(_react.Component);
+
+exports.default = Game;
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","../../elements":"src/elements/index.js","../Score":"src/components/Score/index.js","../Grid":"src/components/Grid/index.js"}],"src/components/Instructions/index.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31808,15 +32459,13 @@ var Instructions = function Instructions() {
 
     for (var i = 1; i <= 5; i++) {
       timer1(i);
-    } // this will clear Timeout when component unmont like in willComponentUnmount
-
+    }
 
     return function () {
       clearTimeout(timer1);
     };
-  }, [] //useEffect will run only one time
-  );
-  return _react.default.createElement("p", null, _react.default.createElement(_elements.Keys, null, _react.default.createElement(KeyButton, {
+  }, []);
+  return _react.default.createElement(_elements.GameInstructionContainer, null, _react.default.createElement(_elements.Keys, null, _react.default.createElement(KeyButton, {
     currentKey: key,
     index: 1
   }), _react.default.createElement("br", null), _react.default.createElement("span", {
@@ -31921,17 +32570,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _hoc = require("../hoc");
 
@@ -31939,33 +32578,25 @@ var _components = require("../components");
 
 var _elements = require("../elements");
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+var _waves = _interopRequireDefault(require("../assets/img/waves.gif"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Home =
-/*#__PURE__*/
-function (_Component) {
-  (0, _inherits2.default)(Home, _Component);
-
-  function Home() {
-    (0, _classCallCheck2.default)(this, Home);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Home).apply(this, arguments));
-  }
-
-  (0, _createClass2.default)(Home, [{
-    key: "render",
-    value: function render() {
-      return _react.default.createElement(_elements.Container, null, this.props.event, " | ", this.props.movement, _react.default.createElement("div", null, _react.default.createElement(_components.Header, null), _react.default.createElement(_components.Instruction, null)));
-    }
-  }]);
-  return Home;
-}(_react.Component);
+var Home = function Home(_ref) {
+  var event = _ref.event;
+  return _react.default.createElement(_elements.GameFactory, null, _react.default.createElement(_elements.Container, null, console.log(event), _react.default.createElement("div", null, _react.default.createElement(_components.Header, null), _react.default.createElement("br", null), _react.default.createElement(_components.Game, {
+    event: event
+  }), _react.default.createElement("br", null), _react.default.createElement(_components.Instruction, null), _react.default.createElement(_elements.Wave, {
+    className: "waves",
+    src: _waves.default,
+    alt: ""
+  }))));
+};
 
 var _default = (0, _hoc.KeyBoardManagar)(Home);
 
 exports.default = _default;
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","../hoc":"src/hoc/index.js","../components":"src/components/index.js","../elements":"src/elements/index.js"}],"src/pages/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../hoc":"src/hoc/index.js","../components":"src/components/index.js","../elements":"src/elements/index.js","../assets/img/waves.gif":"src/assets/img/waves.gif"}],"src/pages/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32082,7 +32713,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64316" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63552" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

@@ -20,7 +20,13 @@
   font-style: normal;
 }* {
   box-sizing: border-box;
-  font-size: 15px;
+}
+
+*:focus,
+textarea:focus,
+input:focus,
+button:focus {
+  outline: none;
 }
 
 body {

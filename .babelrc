@@ -14,7 +14,8 @@
           "@Elements": "./src/elements",
           "@Styles": "./src/assets/styles",
           "@Utils": "./src/utils",
-          "@HOC": "./src/hoc"
+          "@HOC": "./src/hoc",
+          "@Image": "./src/assets/img"
         }
       }
     ]

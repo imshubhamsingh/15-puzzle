@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 const useMovement = () => {
   const [event, handleEvent] = useState(null);
-  const [movement, handleMovement] = useState(null);
 
   const emit = (event, data) => {
-    handleEvent(event);
-    handleMovement(data);
+    handleEvent([event, data]);
   };
 
   const map = {
@@ -89,7 +87,7 @@ const useMovement = () => {
       touchStartClientY = event.touches[0].clientY;
     }
 
-    event.preventDefault();
+    //event.preventDefault();
   };
 
   const eventTouchmoveListner = event => {
@@ -149,12 +147,12 @@ const useMovement = () => {
     return () => removeEventListeners();
   });
 
-  return { event, movement };
+  return event;
 };
 
 const KeyBoardManager = PassedComponent => props => {
-  const { event, movement } = useMovement();
-  return <PassedComponent movement={movement} event={event} {...props} />;
+  const event = useMovement();
+  return <PassedComponent event={event} {...props} />;
 };
 
 export default KeyBoardManager;

@@ -1,5 +1,10 @@
-import React, { Component, useState, useEffect } from 'react';
-import { GameInstruction, Icon, Keys } from '@Elements';
+import React, { useState, useEffect } from 'react';
+import {
+  GameInstruction,
+  Icon,
+  Keys,
+  GameInstructionContainer
+} from '@Elements';
 import { color } from '@Utils';
 
 const KeyButton = ({ currentKey, index }) => {
@@ -25,21 +30,18 @@ const KeyButton = ({ currentKey, index }) => {
 const Instructions = () => {
   const [key, moveKey] = useState(null);
 
-  useEffect(
-    () => {
-      let timer1 = index => setTimeout(() => moveKey(index), index * 350);
-      for (let i = 1; i <= 5; i++) {
-        timer1(i);
-      }
-      // this will clear Timeout when component unmont like in willComponentUnmount
-      return () => {
-        clearTimeout(timer1);
-      };
-    },
-    [] //useEffect will run only one time
-  );
+  useEffect(() => {
+    let timer1 = index => setTimeout(() => moveKey(index), index * 350);
+    for (let i = 1; i <= 5; i++) {
+      timer1(i);
+    }
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, []);
+
   return (
-    <p>
+    <GameInstructionContainer>
       <Keys>
         <KeyButton currentKey={key} index={1} />
         <br />
@@ -52,7 +54,7 @@ const Instructions = () => {
       <GameInstruction>
         Move tiles in grid <br /> to order them from <strong>1 to 15.</strong>
       </GameInstruction>
-    </p>
+    </GameInstructionContainer>
   );
 };
 

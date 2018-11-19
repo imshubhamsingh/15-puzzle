@@ -4,7 +4,16 @@ $break-small: 520px;
 
 * {
   box-sizing: border-box;
-  font-size: 15px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: none;
+}
+
+*:focus,
+textarea:focus,
+input:focus,
+button:focus {
+  outline: none;
 }
 
 body {

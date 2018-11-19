@@ -3,28 +3,37 @@ import { color, transition } from '@Utils';
 
 export const Button = styled.button`
   font-size: 22px;
-  float: left;
-  width: 150px;
-  height: 100%;
+  width: ${props => (props.type === 'big' ? '100%' : '150px')};
   display: block;
-  background-color: ${color.gridTileColor};
   border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  outline: none;
   text-decoration: none;
-  color: ${color.primaryFontColor(0.5)};
-  ${transition({ property: 'color' })};
   line-height: 60px;
   text-align: center;
+  background-color: ${color.gridTileColor};
+  color: ${color.primaryFontColor(0.5)};
+  ${transition({ property: 'color' })};
+  ${transition({ property: 'background-color' })};
   &:active {
-    background-color: ${props => (props.error ? dullRed : ceruleanBlue)};
     transform: scale(0.99);
   }
   &:hover {
     background-color: ${color.buttonHoverColor};
     color: ${color.primaryFontColor()};
   }
+
+  @media (hover: none), (hover: on-demand) {
+    &:hover {
+      background-color: ${color.gridTileColor};
+      color: ${color.primaryFontColor(0.5)};
+    }
+  }
   @media only screen and (max-width: 520px) {
     font-size: 16px;
-    width: 100px;
+    width: ${props => (props.type === 'big' ? '100%' : '112px')};
     height: 100%;
     border-radius: 5px;
     padding: 0 5px;
