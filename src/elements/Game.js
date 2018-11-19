@@ -10,7 +10,33 @@ export const gameStatus = {
   GAME_PAUSED: '__game_paused__'
 };
 
-const swap = (arr, from, row, col, move) => {
+const swap = (arr, from, to) => {
+  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
+  return arr;
+};
+
+const isNeighbour = (to, from) => {
+  let emptyColumn = Math.floor(to % 4);
+  let emptyRow = Math.floor(to / 4);
+  let clickedColumn = Math.floor(from % 4);
+  let clickedRow = Math.floor(from / 4);
+
+  const sameRow = emptyRow === clickedRow;
+  const sameColumn = emptyColumn === clickedColumn;
+  const columnDiff = emptyColumn - clickedColumn;
+  const rowDiff = emptyRow - clickedRow;
+  const diffColumn = Math.abs(columnDiff) === 1;
+  const diffRow = Math.abs(rowDiff) === 1;
+  const sameRowDiffColumn = sameRow && diffColumn;
+  const sameColumnDiffRow = sameColumn && diffRow;
+  if (sameRowDiffColumn || sameColumnDiffRow) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const swapSpace = (arr, from, row, col, move) => {
   let yMove = move === 0 ? 1 : move === 2 ? -1 : 0;
   let xMove = move === 3 ? 1 : move === 1 ? -1 : 0;
   let newRow = row + yMove;
@@ -19,23 +45,20 @@ const swap = (arr, from, row, col, move) => {
     return [false, arr];
   }
   let to = newRow * 4 + newCol;
-  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
-  return [true, arr];
+  return [true, swap(arr, from, to)];
 };
 
-const shuffle = (arr, size) => {
-  let shuffled = arr.slice(0),
-    i = arr.length,
-    temp,
-    index;
-  while (i--) {
-    index = Math.floor((i + 1) * Math.random());
-    temp = shuffled[index];
-    shuffled[index] = shuffled[i];
-    shuffled[i] = temp;
+const shuffle = array_elements => {
+  let i = array_elements.length,
+    randomNumIndex,
+    randomNum;
+  while (--i > 0) {
+    randomNumIndex = Math.floor(Math.random() * (i + 1));
+    randomNum = array_elements[randomNumIndex];
+    array_elements[randomNumIndex] = array_elements[i];
+    array_elements[i] = randomNum;
   }
-
-  return shuffled.slice(0, size);
+  return array_elements;
 };
 
 const ValuesContext = createContext({});
@@ -43,7 +66,7 @@ const SetValueContext = createContext(() => {});
 
 class GameFactory extends Component {
   defaultState = num => ({
-    numbers: shuffle(genrateArray(16, num), 16),
+    numbers: shuffle(genrateArray(16, num)),
     moves: 0,
     seconds: 0,
     gameStatus: gameStatus.GAME_IDLE
@@ -55,6 +78,9 @@ class GameFactory extends Component {
     this.setState(this.defaultState(18));
     setTimeout(() => {
       this.setState(this.defaultState(1));
+      if (this.timerId) {
+        clearInterval(this.timerId);
+      }
     }, 100);
   };
 
@@ -67,7 +93,7 @@ class GameFactory extends Component {
 
   move = (from, row, col, moveType) => {
     this.setState(prevState => {
-      const [updated, newNumList] = swap(
+      const [updated, newNumList] = swapSpace(
         prevState.numbers,
         from,
         row,
@@ -75,6 +101,9 @@ class GameFactory extends Component {
         moveType
       );
       if (updated) {
+        if (prevState.moves === 0) {
+          this.setTimer();
+        }
         return {
           number: newNumList,
           moves: prevState.moves + 1
@@ -89,12 +118,27 @@ class GameFactory extends Component {
     });
   };
 
-  setTimer() {
+  setTimer = () => {
     this.timerId = setInterval(() => {
       this.addTimer();
     }, 1000);
-  }
+  };
 
+  clickMove = from => {
+    this.setState(prevState => {
+      let to = prevState.numbers.indexOf(16);
+      if (isNeighbour(to, from)) {
+        const newNumList = swap(prevState.numbers, to, from);
+        if (prevState.moves === 0) {
+          this.setTimer();
+        }
+        return {
+          number: newNumList,
+          moves: prevState.moves + 1
+        };
+      }
+    });
+  };
   render() {
     return (
       <ValuesContext.Provider value={this.state}>
@@ -103,7 +147,8 @@ class GameFactory extends Component {
             resetGame: this.reset,
             setTimer: this.setTimer,
             gettingEmptyBoxLocation: this.gettingEmptyBoxLocation,
-            moveCell: this.move
+            moveCell: this.move,
+            clickMove: this.clickMove
           }}
         >
           {this.props.children}

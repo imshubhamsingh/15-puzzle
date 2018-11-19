@@ -22,7 +22,13 @@ export default class Cell extends Component {
     const { number, index } = this.props;
     return (
       <CellContainer>
-        <NumberCellContainer number={number} index={index + 1}>
+        <NumberCellContainer
+          number={number}
+          index={index + 1}
+          onClick={() => {
+            this.props.clickMove(index);
+          }}
+        >
           <div className="ball-1" />
           <div className="ball-2" />
           <div className="number">{number}</div>

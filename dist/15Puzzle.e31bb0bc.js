@@ -28485,8 +28485,7 @@ var useMovement = function useMovement() {
 
   };
 
-  var eventTouchmoveListner = function eventTouchmoveListner(event) {
-    event.preventDefault();
+  var eventTouchmoveListner = function eventTouchmoveListner(event) {// event.preventDefault();
   };
 
   var eventTouchendListner = function eventTouchendListner(event) {
@@ -28666,7 +28665,33 @@ var gameStatus = {
 };
 exports.gameStatus = gameStatus;
 
-var swap = function swap(arr, from, row, col, move) {
+var swap = function swap(arr, from, to) {
+  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
+  return arr;
+};
+
+var isNeighbour = function isNeighbour(to, from) {
+  var emptyColumn = Math.floor(to % 4);
+  var emptyRow = Math.floor(to / 4);
+  var clickedColumn = Math.floor(from % 4);
+  var clickedRow = Math.floor(from / 4);
+  var sameRow = emptyRow === clickedRow;
+  var sameColumn = emptyColumn === clickedColumn;
+  var columnDiff = emptyColumn - clickedColumn;
+  var rowDiff = emptyRow - clickedRow;
+  var diffColumn = Math.abs(columnDiff) === 1;
+  var diffRow = Math.abs(rowDiff) === 1;
+  var sameRowDiffColumn = sameRow && diffColumn;
+  var sameColumnDiffRow = sameColumn && diffRow;
+
+  if (sameRowDiffColumn || sameColumnDiffRow) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+var swapSpace = function swapSpace(arr, from, row, col, move) {
   var yMove = move === 0 ? 1 : move === 2 ? -1 : 0;
   var xMove = move === 3 ? 1 : move === 1 ? -1 : 0;
   var newRow = row + yMove;
@@ -28677,24 +28702,22 @@ var swap = function swap(arr, from, row, col, move) {
   }
 
   var to = newRow * 4 + newCol;
-  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
-  return [true, arr];
+  return [true, swap(arr, from, to)];
 };
 
-var shuffle = function shuffle(arr, size) {
-  var shuffled = arr.slice(0),
-      i = arr.length,
-      temp,
-      index;
+var shuffle = function shuffle(array_elements) {
+  var i = array_elements.length,
+      randomNumIndex,
+      randomNum;
 
-  while (i--) {
-    index = Math.floor((i + 1) * Math.random());
-    temp = shuffled[index];
-    shuffled[index] = shuffled[i];
-    shuffled[i] = temp;
+  while (--i > 0) {
+    randomNumIndex = Math.floor(Math.random() * (i + 1));
+    randomNum = array_elements[randomNumIndex];
+    array_elements[randomNumIndex] = array_elements[i];
+    array_elements[i] = randomNum;
   }
 
-  return shuffled.slice(0, size);
+  return array_elements;
 };
 
 var ValuesContext = (0, _react.createContext)({});
@@ -28719,7 +28742,7 @@ function (_Component) {
     _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(GameFactory)).call.apply(_getPrototypeOf2, [this].concat(args)));
     (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "defaultState", function (num) {
       return {
-        numbers: shuffle(genrateArray(16, num), 16),
+        numbers: shuffle(genrateArray(16, num)),
         moves: 0,
         seconds: 0,
         gameStatus: gameStatus.GAME_IDLE
@@ -28731,6 +28754,10 @@ function (_Component) {
 
       setTimeout(function () {
         _this.setState(_this.defaultState(1));
+
+        if (_this.timerId) {
+          clearInterval(_this.timerId);
+        }
       }, 100);
     });
     (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "gettingEmptyBoxLocation", function () {
@@ -28742,12 +28769,16 @@ function (_Component) {
     });
     (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "move", function (from, row, col, moveType) {
       _this.setState(function (prevState) {
-        var _swap = swap(prevState.numbers, from, row, col, moveType),
-            _swap2 = (0, _slicedToArray2.default)(_swap, 2),
-            updated = _swap2[0],
-            newNumList = _swap2[1];
+        var _swapSpace = swapSpace(prevState.numbers, from, row, col, moveType),
+            _swapSpace2 = (0, _slicedToArray2.default)(_swapSpace, 2),
+            updated = _swapSpace2[0],
+            newNumList = _swapSpace2[1];
 
         if (updated) {
+          if (prevState.moves === 0) {
+            _this.setTimer();
+          }
+
           return {
             number: newNumList,
             moves: prevState.moves + 1
@@ -28762,19 +28793,33 @@ function (_Component) {
         };
       });
     });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "setTimer", function () {
+      _this.timerId = setInterval(function () {
+        _this.addTimer();
+      }, 1000);
+    });
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "clickMove", function (from) {
+      _this.setState(function (prevState) {
+        var to = prevState.numbers.indexOf(16);
+
+        if (isNeighbour(to, from)) {
+          var newNumList = swap(prevState.numbers, to, from);
+
+          if (prevState.moves === 0) {
+            _this.setTimer();
+          }
+
+          return {
+            number: newNumList,
+            moves: prevState.moves + 1
+          };
+        }
+      });
+    });
     return _this;
   }
 
   (0, _createClass2.default)(GameFactory, [{
-    key: "setTimer",
-    value: function setTimer() {
-      var _this2 = this;
-
-      this.timerId = setInterval(function () {
-        _this2.addTimer();
-      }, 1000);
-    }
-  }, {
     key: "render",
     value: function render() {
       return _react.default.createElement(ValuesContext.Provider, {
@@ -28784,7 +28829,8 @@ function (_Component) {
           resetGame: this.reset,
           setTimer: this.setTimer,
           gettingEmptyBoxLocation: this.gettingEmptyBoxLocation,
-          moveCell: this.move
+          moveCell: this.move,
+          clickMove: this.clickMove
         }
       }, this.props.children));
     }
@@ -32041,14 +32087,15 @@ var _elements = require("../../elements");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Score = function Score(_ref) {
-  var moves = _ref.moves;
+  var moves = _ref.moves,
+      seconds = _ref.seconds;
   return _react.default.createElement(_elements.ScoreContainer, null, _react.default.createElement("div", {
     className: "time"
   }, _react.default.createElement("div", {
     className: "score-title"
   }, "Time"), _react.default.createElement("div", {
     className: "time-container"
-  }, "12s")), _react.default.createElement("div", {
+  }, seconds, "s")), _react.default.createElement("div", {
     className: "move"
   }, _react.default.createElement("div", {
     className: "score-title"
@@ -32134,13 +32181,18 @@ function (_Component) {
   (0, _createClass2.default)(Cell, [{
     key: "render",
     value: function render() {
+      var _this = this;
+
       //const { x, y } = moveKey(this.props.x, this.props.y);
       var _this$props = this.props,
           number = _this$props.number,
           index = _this$props.index;
       return _react.default.createElement(_elements.CellContainer, null, _react.default.createElement(_elements.NumberCellContainer, {
         number: number,
-        index: index + 1
+        index: index + 1,
+        onClick: function onClick() {
+          _this.props.clickMove(index);
+        }
       }, _react.default.createElement("div", {
         className: "ball-1"
       }), _react.default.createElement("div", {
@@ -32184,6 +32236,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// numbers={this.props.numbers}
+// eventType={this.props.eventType}
+// status={this.props.gameStatus}
+// onClick={this.props.clickMove}
 var Grid =
 /*#__PURE__*/
 function (_Component) {
@@ -32196,19 +32252,26 @@ function (_Component) {
 
   (0, _createClass2.default)(Grid, [{
     key: "cellRender",
-    value: function cellRender(number) {
+    value: function cellRender(number, methods) {
       return number.map(function (i, _) {
         return _react.default.createElement(_Cell.default, {
           key: _,
           number: i,
-          index: _
+          index: _,
+          clickMove: methods.clickMove
         });
       });
     }
   }, {
     key: "render",
     value: function render() {
-      return _react.default.createElement(_elements.GridContainer, null, this.cellRender(this.props.numbers));
+      var _this = this;
+
+      return _react.default.createElement(_elements.GameFactoryConsumer, null, function (_ref) {
+        var values = _ref.values,
+            methods = _ref.methods;
+        return _react.default.createElement(_elements.GridContainer, null, _this.cellRender(values.numbers, methods));
+      });
     }
   }]);
   return Grid;
@@ -32279,16 +32342,14 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      console.log(this.props);
       return _react.default.createElement("div", null, _react.default.createElement(_elements.GameScore, null, _react.default.createElement(_elements.Button, {
         onClick: this.props.resetGame
       }, "new game"), _react.default.createElement(_Score.default, {
-        moves: this.props.moves
-      })), _react.default.createElement(_Grid.default, {
-        numbers: this.props.numbers,
-        eventType: this.props.eventType
-      }), _react.default.createElement(_elements.Button, {
-        type: "big"
+        moves: this.props.moves,
+        seconds: this.props.seconds
+      })), _react.default.createElement(_Grid.default, null), _react.default.createElement(_elements.Button, {
+        type: "big",
+        onClick: function onClick() {}
       }, "Pause"));
     }
   }]);

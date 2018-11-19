@@ -91,7 +91,7 @@ const useMovement = () => {
   };
 
   const eventTouchmoveListner = event => {
-    event.preventDefault();
+    // event.preventDefault();
   };
 
   const eventTouchendListner = event => {

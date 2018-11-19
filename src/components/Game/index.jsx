@@ -13,15 +13,16 @@ export default class Game extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <GameScore>
           <Button onClick={this.props.resetGame}>new game</Button>
-          <Score moves={this.props.moves} />
+          <Score moves={this.props.moves} seconds={this.props.seconds} />
         </GameScore>
-        <Grid numbers={this.props.numbers} eventType={this.props.eventType} />
-        <Button type="big">Pause</Button>
+        <Grid />
+        <Button type="big" onClick={() => {}}>
+          Pause
+        </Button>
       </div>
     );
   }

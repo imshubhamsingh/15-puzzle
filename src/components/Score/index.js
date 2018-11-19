@@ -1,12 +1,12 @@
 import React from 'react';
 import { ScoreContainer } from '@Elements';
 
-const Score = ({ moves }) => {
+const Score = ({ moves, seconds }) => {
   return (
     <ScoreContainer>
       <div className="time">
         <div className="score-title">Time</div>
-        <div className="time-container">12s</div>
+        <div className="time-container">{seconds}s</div>
       </div>
       <div className="move">
         <div className="score-title">Moves</div>
