@@ -106,42 +106,46 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"manifest.json":[function(require,module,exports) {
 module.exports = {
-  "name": "15 Puzzle",
-  "short_name": "15 Puzzle",
-  "start_url": "./index.html",
+  "theme_color": "#57407c",
+  "background_color": "#57407c",
   "display": "standalone",
-  "description": "The 15 Puzzle, also known as Game of Fifteen.",
+  "orientation": "portrait",
+  "Scope": "/",
+  "start_url": "/",
   "icons": [{
-    "src": "./public/icons/android-icon-36x36.png",
-    "sizes": "36x36",
-    "type": "image/png",
-    "density": "0.75"
-  }, {
-    "src": "./public/icons/android-icon-48x48.png",
-    "sizes": "48x48",
-    "type": "image/png",
-    "density": "1.0"
-  }, {
-    "src": "./public/icons/android-icon-72x72.png",
+    "src": "public/images/icons/icon-72x72.png",
     "sizes": "72x72",
-    "type": "image/png",
-    "density": "1.5"
+    "type": "image/png"
   }, {
-    "src": "./public/icons/android-icon-96x96.png",
+    "src": "public/images/icons/icon-96x96.png",
     "sizes": "96x96",
-    "type": "image/png",
-    "density": "2.0"
+    "type": "image/png"
   }, {
-    "src": "./public/icons/android-icon-144x144.png",
+    "src": "public/images/icons/icon-128x128.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  }, {
+    "src": "public/images/icons/icon-144x144.png",
     "sizes": "144x144",
-    "type": "image/png",
-    "density": "3.0"
+    "type": "image/png"
   }, {
-    "src": "./public/icons/android-icon-192x192.png",
+    "src": "public/images/icons/icon-152x152.png",
+    "sizes": "152x152",
+    "type": "image/png"
+  }, {
+    "src": "public/images/icons/icon-192x192.png",
     "sizes": "192x192",
-    "type": "image/png",
-    "density": "4.0"
-  }]
+    "type": "image/png"
+  }, {
+    "src": "public/images/icons/icon-384x384.png",
+    "sizes": "384x384",
+    "type": "image/png"
+  }, {
+    "src": "public/images/icons/icon-512x512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  "splash_pages": null
 };
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -170,7 +174,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62395" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51702" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
