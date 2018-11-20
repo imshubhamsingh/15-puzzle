@@ -43,7 +43,6 @@ export default class Game extends Component {
             {this.props.gameState === gameState.GAME_PAUSED ? 'Play' : 'Pause'}
           </Button>
         </PlayPauseContainer>
-
         <Modal on={this.props.gameState === gameState.GAME_OVER}>
           <ModalContainer>
             <div className="text-1">Excellent!</div>

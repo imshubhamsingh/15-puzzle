@@ -32110,7 +32110,7 @@ exports.Button = Button;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ModalContainer = exports.Wave = exports.GameInstructionContainer = exports.ScoreContainer = exports.GameScore = exports.Keys = exports.NumberCellContainer = exports.CellContainer = exports.PlayPauseContainer = exports.GridOverlay = exports.GridContainer = exports.Container = void 0;
+exports.Profile = exports.Footer = exports.ModalContainer = exports.Wave = exports.GameInstructionContainer = exports.ScoreContainer = exports.GameScore = exports.Keys = exports.NumberCellContainer = exports.CellContainer = exports.PlayPauseContainer = exports.GridOverlay = exports.GridContainer = exports.Container = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
@@ -32237,6 +32237,20 @@ var ModalContainer = _styledComponents.default.div.withConfig({
 })(["display:flex;flex-direction:column;align-content:space-around;width:100%;height:100%;text-align:center;justify-content:space-between;.text-1{font-family:'Pacifico',cursive;text-align:center;font-weight:bold;font-size:37px;color:", ";}"], _utils.color.backgroundColor);
 
 exports.ModalContainer = ModalContainer;
+
+var Footer = _styledComponents.default.div.withConfig({
+  displayName: "Container__Footer",
+  componentId: "sc-16h46pr-12"
+})(["width:100%;height:22px;background:", ";z-index:10;display:flex;justify-content:center;flex-direction:column;margin-bottom:9px;& .text{color:", ";font-family:'Clear Sans',Arial,sans-serif;text-align:center;bottom:0px;margin:11px auto 0px;a{text-decoration:none;color:white;font-weight:bold;}}& .logos{display:flex;justify-content:center;align-items:center;width:100%;margin-top:29px;}@media (max-width:520px){height:22px;margin-top:-10px;padding:10px 4px;& .text{margin:26px auto 0px;}& .logos{margin-top:20px;}}"], _utils.color.backgroundColor, _utils.color.primaryFontColor());
+
+exports.Footer = Footer;
+
+var Profile = _styledComponents.default.a.withConfig({
+  displayName: "Container__Profile",
+  componentId: "sc-16h46pr-13"
+})(["fill:", ";svg,path{", ";margin-right:17px;height:32px;width:32px;}&:hover svg path,&:hover{fill:", ";color:", ";}@media (max-width:520px){svg,path{", ";margin-right:7px;height:22px;width:22px;}}"], _utils.color.gridTileColor, (0, _utils.transition)({}), _utils.color.buttonHoverColor, _utils.color.buttonHoverColor, (0, _utils.transition)({}));
+
+exports.Profile = Profile;
 },{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../utils":"src/utils/index.js"}],"src/assets/img/waves.gif":[function(require,module,exports) {
 module.exports = "/waves.ddcf5f9c.gif";
 },{}],"src/elements/Text.js":[function(require,module,exports) {
@@ -32336,6 +32350,39 @@ var Icon = function Icon(props) {
         }, _react.default.createElement("path", {
           fill: color,
           d: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z"
+        }));
+      }
+
+    case 'github':
+      {
+        return _react.default.createElement("svg", {
+          viewBox: "0 0 24 24",
+          height: size,
+          width: size
+        }, _react.default.createElement("path", {
+          d: "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+        }));
+      }
+
+    case 'twitter':
+      {
+        return _react.default.createElement("svg", {
+          viewBox: "0 0 24 24",
+          height: size,
+          width: size
+        }, _react.default.createElement("path", {
+          d: "M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z"
+        }));
+      }
+
+    case 'linkedin':
+      {
+        return _react.default.createElement("svg", {
+          viewBox: "0 0 24 24",
+          height: size,
+          width: size
+        }, _react.default.createElement("path", {
+          d: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
         }));
       }
   }
@@ -32852,7 +32899,58 @@ function (_Component) {
 }(_react.Component);
 
 exports.default = Header;
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","../../elements":"src/elements/index.js"}],"src/components/index.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","react":"node_modules/react/index.js","../../elements":"src/elements/index.js"}],"src/components/Details/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _elements = require("../../elements");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+var Details = function Details(_ref) {
+  var name = _ref.name,
+      githubURL = _ref.githubURL,
+      linkedinURL = _ref.linkedinURL,
+      twitterURL = _ref.twitterURL,
+      projectURL = _ref.projectURL;
+  return _react.default.createElement(_elements.Footer, null, _react.default.createElement("div", {
+    className: "text"
+  }, "Made with ", _react.default.createElement("span", {
+    style: {
+      color: 'red'
+    }
+  }, "\u2764"), " by ", name, _react.default.createElement("br", null), "This project is open source, visit", ' ', _react.default.createElement("a", {
+    href: projectURL,
+    target: "_blank"
+  }, "the repo.")), _react.default.createElement("div", {
+    className: "logos"
+  }, _react.default.createElement(_elements.Profile, {
+    href: githubURL,
+    target: "_blank"
+  }, _react.default.createElement(_elements.Icon, {
+    name: "github"
+  })), _react.default.createElement(_elements.Profile, {
+    href: linkedinURL,
+    target: "_blank"
+  }, _react.default.createElement(_elements.Icon, {
+    name: "linkedin"
+  })), _react.default.createElement(_elements.Profile, {
+    href: twitterURL,
+    target: "_blank"
+  }, _react.default.createElement(_elements.Icon, {
+    name: "twitter"
+  }))));
+};
+
+var _default = Details;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","../../elements":"src/elements/index.js"}],"src/components/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32876,6 +32974,12 @@ Object.defineProperty(exports, "Header", {
     return _Header.default;
   }
 });
+Object.defineProperty(exports, "Details", {
+  enumerable: true,
+  get: function () {
+    return _Details.default;
+  }
+});
 
 var _Game = _interopRequireDefault(require("./Game"));
 
@@ -32883,8 +32987,10 @@ var _Instructions = _interopRequireDefault(require("./Instructions"));
 
 var _Header = _interopRequireDefault(require("./Header"));
 
+var _Details = _interopRequireDefault(require("./Details"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Game":"src/components/Game/index.jsx","./Instructions":"src/components/Instructions/index.jsx","./Header":"src/components/Header/index.jsx"}],"src/pages/Home.jsx":[function(require,module,exports) {
+},{"./Game":"src/components/Game/index.jsx","./Instructions":"src/components/Instructions/index.jsx","./Header":"src/components/Header/index.jsx","./Details":"src/components/Details/index.js"}],"src/pages/Home.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32915,10 +33021,16 @@ var Home = function Home(_ref) {
         methods = _ref2.methods;
     return _react.default.createElement(_react.Fragment, null, _react.default.createElement(_components.Header, null), _react.default.createElement("br", null), _react.default.createElement(_components.Game, (0, _extends2.default)({
       eventType: eventType
-    }, values, methods)), _react.default.createElement("br", null), _react.default.createElement(_components.Instruction, null), _react.default.createElement(_elements.Wave, {
+    }, values, methods)), _react.default.createElement("br", null), _react.default.createElement(_components.Instruction, null), _react.default.createElement("div", null, _react.default.createElement(_elements.Wave, {
       className: "waves",
       src: _waves.default,
       alt: ""
+    })), _react.default.createElement("br", null), _react.default.createElement(_components.Details, {
+      name: 'Shubham Singh',
+      githubURL: 'https://github.com/imshubhamsingh',
+      projectURL: 'https://github.com/imshubhamsingh/15-puzzle',
+      linkedinURL: 'https://linkedin.com/in/imshubhamsingh97/',
+      twitterURL: 'https://twitter.com/imshubhamsingh_'
     }));
   }));
 };
@@ -33051,7 +33163,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59925" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49385" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

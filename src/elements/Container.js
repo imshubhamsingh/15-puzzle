@@ -317,3 +317,72 @@ export const ModalContainer = styled.div`
     color: ${color.backgroundColor};
   }
 `;
+
+export const Footer = styled.div`
+  width: 100%;
+  height: 22px;
+  background: ${color.backgroundColor};
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 9px;
+  & .text {
+    color: ${color.primaryFontColor()};
+    font-family: 'Clear Sans', Arial, sans-serif;
+    text-align: center;
+    bottom: 0px;
+    margin: 11px auto 0px;
+    a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+  }
+
+  & .logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 29px;
+  }
+
+  @media (max-width: 520px) {
+    height: 22px;
+    margin-top: -10px;
+    padding: 10px 4px;
+    & .text {
+      margin: 26px auto 0px;
+    }
+    & .logos {
+      margin-top: 20px;
+    }
+  }
+`;
+
+export const Profile = styled.a`
+  fill: ${color.gridTileColor};
+  svg,
+  path {
+    ${transition({})};
+    margin-right: 17px;
+    height: 32px;
+    width: 32px;
+  }
+  &:hover svg path,
+  &:hover {
+    fill: ${color.buttonHoverColor};
+    color: ${color.buttonHoverColor};
+  }
+
+  @media (max-width: 520px) {
+    svg,
+    path {
+      ${transition({})};
+      margin-right: 7px;
+      height: 22px;
+      width: 22px;
+    }
+  }
+`;

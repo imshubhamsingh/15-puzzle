@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { KeyBoardManagar } from '@HOC';
 
-import { Instruction, Header, Game } from '@Components';
+import { Instruction, Header, Game, Details } from '@Components';
 import { Container, Wave, GameFactoryConsumer } from '@Elements';
 
 import Waves from '@Image/waves.gif';
@@ -18,7 +18,17 @@ const Home = ({ eventType }) => {
               <Game eventType={eventType} {...values} {...methods} />
               <br />
               <Instruction />
-              <Wave className="waves" src={Waves} alt="" />
+              <div>
+                <Wave className="waves" src={Waves} alt="" />
+              </div>
+              <br />
+              <Details
+                name={'Shubham Singh'}
+                githubURL={'https://github.com/imshubhamsingh'}
+                projectURL={'https://github.com/imshubhamsingh/15-puzzle'}
+                linkedinURL={'https://linkedin.com/in/imshubhamsingh97/'}
+                twitterURL={'https://twitter.com/imshubhamsingh_'}
+              />
             </Fragment>
           );
         }}
