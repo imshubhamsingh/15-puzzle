@@ -108,7 +108,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 module.exports = {
   "name": "15 Puzzle",
   "short_name": "15 Puzzle",
-  "start_url": ".",
+  "start_url": "/index.html",
   "display": "standalone",
   "description": "The 15 Puzzle, also known as Game of Fifteen.",
   "icons": [{
