@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { Portal, elevation, bounceInUp, opacity, color } from '@Utils';
+import { Portal, elevation, bounceInUp, fadeIn, color } from '@Utils';
 
 export default class Modal extends Component {
   render() {
@@ -55,7 +55,7 @@ const Background = styled.div`
   width: 100%;
   z-index: 1000;
   animation-duration: 0.75s;
-  animation-name: ${opacity};
+  animation-name: ${fadeIn};
   height: 100%;
   opacity: 0.3;
   background: ${color.overlayBackgroundColor};

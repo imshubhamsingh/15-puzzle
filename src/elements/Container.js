@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { color, transition, bounceIn } from '@Utils';
+import { color, transition, bounceIn, fadeIn } from '@Utils';
 
 export const Container = styled.div`
   width: 500px;
@@ -36,17 +36,20 @@ export const GridContainer = styled.div`
 `;
 
 export const GridOverlay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   padding: 15px;
   z-index: 100;
-  background-color: ${color.overlayBackgroundColor};
+  background-color: ${color.gridOverlayBackground};
   float: left;
   margin-top: 3px;
-  opacity: 0.5;
   margin-left: 2px;
   border-radius: 10px;
   width: 499px;
   height: 487px;
+  animation: ${fadeIn} 250ms;
   @media screen and (max-width: 520px) {
     width: 280px;
     height: 275px;

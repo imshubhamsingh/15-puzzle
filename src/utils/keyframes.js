@@ -70,7 +70,7 @@ from,
   }
 `;
 
-export const opacity = keyframes`
+export const fadeIn = keyframes`
   from{
       opacity: 0;
   }

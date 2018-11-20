@@ -12,10 +12,10 @@ const Score = ({ moves, seconds }) => {
         <div className="score-title">Moves</div>
         <div className="move-container">{moves}</div>
       </div>
-      <div className="best">
+      {/* <div className="best">
         <div className="score-title">best</div>
-        <div className="best-container">13392</div>
-      </div>
+        <div className="best-container">123s 10Moves</div>
+      </div> */}
     </ScoreContainer>
   );
 };

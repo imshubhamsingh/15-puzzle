@@ -1891,10 +1891,6 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-fonts@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/fonts/-/fonts-0.0.2.tgz#fa5e5a92534a9868b99184ac92e45f8e6a684776"
-
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -3798,12 +3794,6 @@ react-router@^4.4.0-beta.6:
     react-is "^16.5.2"
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
-
-react-spring@^6.1.8:
-  version "6.1.8"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-6.1.8.tgz#ce20f0fb07722f977510ea865801df3fdc37d819"
-  dependencies:
-    "@babel/runtime" "^7.1.2"
 
 react@^16.7.0-alpha.2:
   version "16.7.0-alpha.2"

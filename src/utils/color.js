@@ -6,6 +6,7 @@ export const buttonHoverColor = '#d3386a';
 export const modalTextColor = '#534648';
 export const modalBackgroundColor = '#FFFFFF';
 export const overlayBackgroundColor = '#000000';
+export const gridOverlayBackground = '#412667b5';
 
 export default {
   backgroundColor,
@@ -14,5 +15,6 @@ export default {
   buttonHoverColor,
   modalTextColor,
   modalBackgroundColor,
-  overlayBackgroundColor
+  overlayBackgroundColor,
+  gridOverlayBackground
 };
