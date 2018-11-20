@@ -15,7 +15,10 @@ export default class Game extends Component {
     if (prevProps.eventType !== this.props.eventType) {
       const [_, move] = this.props.eventType || [null, null];
       const [row, col, location] = this.props.gettingEmptyBoxLocation();
-      if (this.props.gameState !== gameState.GAME_PAUSED) {
+      if (
+        this.props.gameState !== gameState.GAME_PAUSED ||
+        this.props.gameState !== gameState.GAME_OVER
+      ) {
         this.props.moveCell(location, row, col, move);
       }
     }
