@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { color, transition } from '@Utils';
+import { color, transition, bounceIn } from '@Utils';
 
 export const Container = styled.div`
   width: 500px;
   margin: 0 auto;
   @media screen and (max-width: 520px) {
-    width: 280px;
+    width: 291px;
     margin: 0 auto;
   }
 `;
@@ -33,6 +33,30 @@ export const GridContainer = styled.div`
       margin-bottom: 10px;
     }
   }
+`;
+
+export const GridOverlay = styled.div`
+  position: absolute;
+  padding: 15px;
+  z-index: 100;
+  background-color: ${color.overlayBackgroundColor};
+  float: left;
+  margin-top: 3px;
+  opacity: 0.5;
+  margin-left: 2px;
+  border-radius: 10px;
+  width: 499px;
+  height: 487px;
+  @media screen and (max-width: 520px) {
+    width: 280px;
+    height: 275px;
+    margin-left: 6px;
+    margin-top: 5px;
+  }
+`;
+
+export const PlayPauseContainer = styled.div`
+  padding: 0 15px;
 `;
 
 export const CellContainer = styled.div`
@@ -71,7 +95,7 @@ export const NumberCellContainer = styled.div`
   ${transition({ property: 'transform' })};
 
   animation-duration: 0.75s;
-  animation-name: bounceIn;
+  animation-name: ${bounceIn};
 
   height: 107px;
   transform: ${({ x = 0, y = 0 }) => `translate3d(${x}px, ${y}px, 0)`};
@@ -156,45 +180,6 @@ export const NumberCellContainer = styled.div`
       left: ${props => (props.number.toString().length == 2 ? 7 : 16)}px;
     }
   }
-
-  //https://github.com/daneden/animate.css/blob/master/source/bouncing_entrances/bounceIn.css
-  @keyframes bounceIn {
-    from,
-    20%,
-    40%,
-    60%,
-    80%,
-    to {
-      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-    }
-
-    0% {
-      opacity: 0;
-      transform: scale3d(0, 0, 0);
-    }
-
-    20% {
-      transform: scale3d(1.1, 1.1, 1.1);
-    }
-
-    40% {
-      transform: scale3d(0.9, 0.9, 0.9);
-    }
-
-    60% {
-      opacity: 1;
-      transform: scale3d(1.03, 1.03, 1.03);
-    }
-
-    80% {
-      transform: scale3d(0.97, 0.97, 0.97);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale3d(1, 1, 1);
-    }
-  }
 `;
 
 export const Keys = styled.span`
@@ -223,13 +208,14 @@ export const GameScore = styled.div`
   display: flex;
   justify-content: space-between;
   @media screen and (max-width: 520px) {
-    padding: 20px 10px 0 10px;
+    padding: 20px 15px 0 15px;
   }
 `;
 
 export const ScoreContainer = styled.div`
   background: ${color.gridTileColor};
   display: flex;
+  margin-left: 10px;
   padding-left: 15px;
   border-radius: 8px;
 
@@ -239,6 +225,7 @@ export const ScoreContainer = styled.div`
     position: relative;
     display: inline-block;
     text-align: right;
+    width: 97px;
     padding: 13px 20px 0 10px;
     float: right;
   }
@@ -281,6 +268,11 @@ export const ScoreContainer = styled.div`
       text-align: right;
       padding: 8px 15px 0 10px;
       float: right;
+      width: 65px;
+    }
+    .time {
+      width: 80px;
+      padding-right: 6px;
     }
     .best {
       display: none;
@@ -290,6 +282,7 @@ export const ScoreContainer = styled.div`
 
 export const GameInstructionContainer = styled.div`
   display: flex;
+  padding: 0 17px 0 6px;
   justify-content: space-between;
   @media screen and (max-width: 520px) {
     display: block;
@@ -299,7 +292,25 @@ export const GameInstructionContainer = styled.div`
 export const Wave = styled.img`
   margin-top: -30px;
   @media screen and (max-width: 520px) {
-    max-width: 280px;
+    max-width: 270px;
     height: auto;
+    margin-left: 9px;
+  }
+`;
+
+export const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  justify-content: space-between;
+  .text-1 {
+    font-family: 'Pacifico', cursive;
+    text-align: center;
+    font-weight: bold;
+    font-size: 37px;
+    color: ${color.backgroundColor};
   }
 `;

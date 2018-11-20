@@ -14,15 +14,26 @@ export const Button = styled.button`
   line-height: 60px;
   text-align: center;
   background-color: ${color.gridTileColor};
-  color: ${color.primaryFontColor(0.5)};
+  color: ${props =>
+    props.textColor ? props.textColor : color.primaryFontColor(0.5)};
   ${transition({ property: 'color' })};
   ${transition({ property: 'background-color' })};
+  ${transition({ property: 'opacity' })};
   &:active {
     transform: scale(0.99);
   }
   &:hover {
     background-color: ${color.buttonHoverColor};
     color: ${color.primaryFontColor()};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    &:hover {
+      background-color: ${color.gridTileColor};
+      color: ${color.primaryFontColor(0.5)};
+    }
   }
 
   @media (hover: none), (hover: on-demand) {

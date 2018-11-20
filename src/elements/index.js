@@ -1,9 +1,10 @@
-import GameFactory from './Game';
+import GameFactory from './GameFactory';
+import Modal from './Modal';
 
 export * from './Button';
 export * from './Container';
 export * from './Text';
 export * from './Icon';
-export * from './Game';
+export * from './GameFactory';
 
-export { GameFactory };
+export { GameFactory, Modal };

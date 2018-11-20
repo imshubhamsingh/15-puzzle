@@ -4,11 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
     <title>15 Puzzle</title>
+    <script>
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function() {
+                //console.log('Service Worker Registered');
+          });
+      }
+    </script>
 </head>
 <body>
-    <div id="root" />
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+    <div id="portal"></div>
     <script src="./index.js"></script>
 </body>
 </html>

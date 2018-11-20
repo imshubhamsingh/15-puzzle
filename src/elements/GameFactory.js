@@ -1,65 +1,16 @@
-import React, { Component, createContext, useState } from 'react';
+import React, { Component, createContext } from 'react';
+
+import {
+  swap,
+  isNeighbour,
+  swapSpace,
+  shuffle,
+  checkArray,
+  gameState
+} from '@Utils';
 
 // [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 const genrateArray = (num, add) => [...Array(num)].map((_, i) => i + add);
-
-export const gameStatus = {
-  GAME_IDLE: '__game_idle__',
-  GAME_STARTED: '__game_started__',
-  GAME_OVER: '__game_over__',
-  GAME_PAUSED: '__game_paused__'
-};
-
-const swap = (arr, from, to) => {
-  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
-  return arr;
-};
-
-const isNeighbour = (to, from) => {
-  let emptyColumn = Math.floor(to % 4);
-  let emptyRow = Math.floor(to / 4);
-  let clickedColumn = Math.floor(from % 4);
-  let clickedRow = Math.floor(from / 4);
-
-  const sameRow = emptyRow === clickedRow;
-  const sameColumn = emptyColumn === clickedColumn;
-  const columnDiff = emptyColumn - clickedColumn;
-  const rowDiff = emptyRow - clickedRow;
-  const diffColumn = Math.abs(columnDiff) === 1;
-  const diffRow = Math.abs(rowDiff) === 1;
-  const sameRowDiffColumn = sameRow && diffColumn;
-  const sameColumnDiffRow = sameColumn && diffRow;
-  if (sameRowDiffColumn || sameColumnDiffRow) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const swapSpace = (arr, from, row, col, move) => {
-  let yMove = move === 0 ? 1 : move === 2 ? -1 : 0;
-  let xMove = move === 3 ? 1 : move === 1 ? -1 : 0;
-  let newRow = row + yMove;
-  let newCol = col + xMove;
-  if (newRow <= -1 || newCol <= -1 || newRow >= 4 || newCol >= 4) {
-    return [false, arr];
-  }
-  let to = newRow * 4 + newCol;
-  return [true, swap(arr, from, to)];
-};
-
-const shuffle = array_elements => {
-  let i = array_elements.length,
-    randomNumIndex,
-    randomNum;
-  while (--i > 0) {
-    randomNumIndex = Math.floor(Math.random() * (i + 1));
-    randomNum = array_elements[randomNumIndex];
-    array_elements[randomNumIndex] = array_elements[i];
-    array_elements[i] = randomNum;
-  }
-  return array_elements;
-};
 
 const ValuesContext = createContext({});
 const SetValueContext = createContext(() => {});
@@ -69,10 +20,12 @@ class GameFactory extends Component {
     numbers: shuffle(genrateArray(16, num)),
     moves: 0,
     seconds: 0,
-    gameStatus: gameStatus.GAME_IDLE
+    gameState: gameState.GAME_IDLE
   });
 
   state = this.defaultState(1);
+
+  timerId = null;
 
   reset = () => {
     this.setState(this.defaultState(18));
@@ -93,6 +46,7 @@ class GameFactory extends Component {
 
   move = (from, row, col, moveType) => {
     this.setState(prevState => {
+      let newState = null;
       const [updated, newNumList] = swapSpace(
         prevState.numbers,
         from,
@@ -101,14 +55,26 @@ class GameFactory extends Component {
         moveType
       );
       if (updated) {
-        if (prevState.moves === 0) {
-          this.setTimer();
-        }
-        return {
+        newState = {
           number: newNumList,
           moves: prevState.moves + 1
         };
+        if (prevState.moves === 0) {
+          this.setTimer();
+          newState = {
+            ...newState,
+            gameState: gameState.GAME_STARTED
+          };
+        }
+        if (checkArray(this.state.numbers)) {
+          clearInterval(this.timerId);
+          newState = {
+            ...newState,
+            gameState: gameState.GAME_OVER
+          };
+        }
       }
+      return newState;
     });
   };
 
@@ -126,19 +92,52 @@ class GameFactory extends Component {
 
   clickMove = from => {
     this.setState(prevState => {
+      let newState = null;
       let to = prevState.numbers.indexOf(16);
       if (isNeighbour(to, from)) {
         const newNumList = swap(prevState.numbers, to, from);
-        if (prevState.moves === 0) {
-          this.setTimer();
-        }
-        return {
+        newState = {
           number: newNumList,
           moves: prevState.moves + 1
         };
+        if (prevState.moves === 0) {
+          this.setTimer();
+          newState = {
+            ...newState,
+            gameState: gameState.GAME_STARTED
+          };
+        }
+        if (checkArray(this.state.numbers)) {
+          clearInterval(this.timerId);
+          console.log('game over');
+          newState = {
+            ...newState,
+            gameState: gameState.GAME_OVER
+          };
+        }
       }
+      return newState;
     });
   };
+
+  onPauseClick = () => {
+    this.setState(prevState => {
+      let newGameState = null;
+
+      if (prevState.gameState === gameState.GAME_STARTED) {
+        clearInterval(this.timerId);
+        newGameState = gameState.GAME_PAUSED;
+      } else {
+        this.setTimer();
+        newGameState = gameState.GAME_STARTED;
+      }
+
+      return {
+        gameState: newGameState
+      };
+    });
+  };
+
   render() {
     return (
       <ValuesContext.Provider value={this.state}>
@@ -148,7 +147,8 @@ class GameFactory extends Component {
             setTimer: this.setTimer,
             gettingEmptyBoxLocation: this.gettingEmptyBoxLocation,
             moveCell: this.move,
-            clickMove: this.clickMove
+            clickMove: this.clickMove,
+            pauseGame: this.onPauseClick
           }}
         >
           {this.props.children}
