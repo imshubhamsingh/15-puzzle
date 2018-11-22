@@ -10,14 +10,14 @@ import {
 } from '@Utils';
 
 // [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-const genrateArray = (num, add) => [...Array(num)].map((_, i) => i + add);
+const generateArray = (num, add) => [...Array(num)].map((_, i) => i + add);
 
 const ValuesContext = createContext({});
 const SetValueContext = createContext(() => {});
 
 class GameFactory extends Component {
   defaultState = num => ({
-    numbers: shuffle(genrateArray(16, num)),
+    numbers: shuffle(generateArray(16, num)),
     moves: 0,
     seconds: 0,
     gameState: gameState.GAME_IDLE
