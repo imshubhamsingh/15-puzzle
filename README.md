@@ -22,7 +22,7 @@
 <img src="https://raw.githubusercontent.com/imshubhamsingh/15-puzzle/master/screenshots/game.gif" width="500px"/>
 </h1>
 
->The app uses React.js alpha API likes hooks etc..
+> The app uses React.js alpha API like hooks etc..
 ## Development
 
 ### Run app
