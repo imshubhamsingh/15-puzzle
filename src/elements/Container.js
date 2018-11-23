@@ -87,6 +87,7 @@ export const NumberCellContainer = styled.div`
     props.index === props.number ? '#E88A45' : '#6ac6b8'};
   cursor: pointer;
   position: relative;
+  user-select: none;
   justify-content: center;
   align-items: center;
   font-family: 'Pacifico', cursive;
