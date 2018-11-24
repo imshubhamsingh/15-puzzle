@@ -1,3 +1,3 @@
 import KeyBoardManagar from './keyboardManager';
 
-export { KeyBoardManagar };
+export { KeyBoardManager };
