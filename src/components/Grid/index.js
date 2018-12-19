@@ -10,7 +10,7 @@ import { color, gameState } from '@Utils';
 import Cell from '../Cell';
 
 export default class Grid extends Component {
-  cellRender(number, clickMove) {
+  cellRender(number = [], clickMove) {
     return number.map((i, _) => (
       <Cell key={_} number={i} index={_} clickMove={clickMove} />
     ));

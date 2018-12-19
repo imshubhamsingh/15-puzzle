@@ -9,28 +9,82 @@ import {
   gameState
 } from '@Utils';
 
+const NEW_GAME = '__new_game__';
+const RESET_GAME = '__reset_game__';
+
 // [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-const genrateArray = (num, add) => [...Array(num)].map((_, i) => i + add);
+const genrateArray = (num, add) => {
+  let puzzle = [...Array(num)].map((_, i) => i + add);
+  puzzle.push(0);
+  return puzzle;
+};
 
 const ValuesContext = createContext({});
 const SetValueContext = createContext(() => {});
 
+const isSolvable = puzzle => {
+  let parity = 0;
+  let gridWidth = 4;
+  let row = 0;
+  let blankRow = 0;
+  for (let i = 0; i < puzzle.length; i++) {
+    if (i % gridWidth == 0) {
+      // advance to next row
+      row++;
+    }
+    if (puzzle[i] == 0) {
+      blankRow = row;
+      continue;
+    }
+    for (var j = i + 1; j < puzzle.length; j++) {
+      if (puzzle[i] > puzzle[j] && puzzle[j] != 0) {
+        parity++;
+      }
+    }
+  }
+
+  if (gridWidth % 2 == 0) {
+    if (blankRow % 2 == 0) {
+      return parity % 2 == 0;
+    } else {
+      return parity % 2 != 0;
+    }
+  } else {
+    return parity % 2 == 0;
+  }
+};
+
+const genratePuzzle = (arr, event) => {
+  if (event === NEW_GAME) {
+    if (isSolvable(arr)) {
+      return arr;
+    } else {
+      return genratePuzzle(shuffle(genrateArray(15, 1)), NEW_GAME);
+    }
+  } else {
+    return arr;
+  }
+};
+
 class GameFactory extends Component {
-  defaultState = num => ({
-    numbers: shuffle(genrateArray(16, num)),
+  defaultState = (_event, num) => ({
+    numbers:
+      _event === NEW_GAME
+        ? genratePuzzle(shuffle(genrateArray(15, num)), _event)
+        : shuffle(genrateArray(15, num)),
     moves: 0,
     seconds: 0,
     gameState: gameState.GAME_IDLE
   });
 
-  state = this.defaultState(1);
+  state = this.defaultState(NEW_GAME, 1);
 
   timerId = null;
 
   reset = () => {
-    this.setState(this.defaultState(18));
+    this.setState(this.defaultState(RESET_GAME));
     setTimeout(() => {
-      this.setState(this.defaultState(1));
+      this.setState(this.defaultState(NEW_GAME, 1));
       if (this.timerId) {
         clearInterval(this.timerId);
       }
@@ -38,7 +92,7 @@ class GameFactory extends Component {
   };
 
   gettingEmptyBoxLocation = () => {
-    let location = this.state.numbers.indexOf(16);
+    let location = this.state.numbers.indexOf(0);
     let column = Math.floor(location % 4);
     let row = Math.floor(location / 4);
     return [row, column, location];
@@ -93,7 +147,7 @@ class GameFactory extends Component {
   clickMove = from => {
     this.setState(prevState => {
       let newState = null;
-      let to = prevState.numbers.indexOf(16);
+      let to = prevState.numbers.indexOf(0);
       if (isNeighbour(to, from)) {
         const newNumList = swap(prevState.numbers, to, from);
         newState = {
@@ -109,7 +163,6 @@ class GameFactory extends Component {
         }
         if (checkArray(this.state.numbers)) {
           clearInterval(this.timerId);
-          console.log('game over');
           newState = {
             ...newState,
             gameState: gameState.GAME_OVER

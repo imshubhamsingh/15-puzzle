@@ -59,7 +59,7 @@ export const shuffle = array_elements => {
 export const checkArray = arr => {
   let decision = true;
   arr.forEach((i, index) => {
-    if (i !== index + 1) {
+    if (i !== index + 1 && i != 0) {
       decision = false;
     }
   });

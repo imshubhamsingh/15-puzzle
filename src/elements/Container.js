@@ -81,7 +81,8 @@ export const CellContainer = styled.div`
 // 121px;
 // 67px;
 export const NumberCellContainer = styled.div`
-  display: ${props => (props.number < 16 ? 'flex' : 'none')};
+  display: ${props =>
+    props.number > 0 && props.number < 16 ? 'flex' : 'none'};
   border-radius: 10px;
   background: ${props =>
     props.index === props.number ? '#E88A45' : '#6ac6b8'};
