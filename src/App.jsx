@@ -13,7 +13,7 @@ export default class App extends PureComponent {
         <GameFactory>
           <div className="app">
             <Route exact path="/" component={Home} />
-            <Route render={() => <Redirect to="/" />} />
+            {/* <Route render={() => <Redirect to="/" />} /> */}
           </div>
         </GameFactory>
       </BrowserRouter>
