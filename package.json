@@ -23,6 +23,6 @@
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-styled-components": "^1.8.0",
     "react-hot-loader": "^4.3.12",
-    "sass": "^1.15.0"
+    "sass": "^1.71.1"
   }
 }
